@@ -10,3 +10,6 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+routers/.DS_Store
+runtime/.DS_Store
+vendor/.DS_Store
