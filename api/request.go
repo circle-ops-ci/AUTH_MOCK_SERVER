@@ -119,8 +119,9 @@ type SendPushToDevicesRequest struct {
 }
 
 type MatchedPolicyInfo struct {
-	PolicyID int64    `json:"policy_id"`
-	RuleType RuleType `json:"rule_type"`
+	PolicyID   int64    `json:"policy_id"`
+	RuleType   RuleType `json:"rule_type"`
+	PolicyName string   `json:"policy_name"`
 }
 
 type SendPushToDevicesResponse struct {

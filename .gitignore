@@ -13,3 +13,6 @@
 routers/.DS_Store
 runtime/.DS_Store
 vendor/.DS_Store
+
+# glide
+vendor
