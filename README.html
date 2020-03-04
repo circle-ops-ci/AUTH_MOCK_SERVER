@@ -347,6 +347,7 @@ kbd {
 <li><a href="#cancel-device-2fa">Cancel Device 2FA</a></li>
 <li><a href="#get-user-info">Get User Info</a></li>
 <li><a href="#query-callback-status">Query Callback Status</a></li>
+<li><a href="#verify-user-totp">Verify User TOTP</a></li>
 </ul></li>
 <li>Testing
 
@@ -1528,11 +1529,86 @@ kbd {
 </tbody>
 </table>
 
+<p><a name="verify-user-totp"></a></p>
+
+<h2 id="toc_89">Verify User TOTP</h2>
+
+<p>Verify user&#39;s totp.</p>
+
+<p><strong><code>GET</code></strong> /v1/api/users/totpverify?account=<code>USER_ACCOUNT</code>&amp;code=<code>TOTP</code></p>
+
+<ul>
+<li><a href="#curl-verify-user-totp">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_90">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_91">API with query string</h6>
+
+<div><pre><code class="language-none">/v1/api/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_92">Query string</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">account</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Requester account</td>
+</tr>
+<tr>
+<td style="text-align: left">code</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">totp</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_93">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;result&quot;: true
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">result</td>
+<td style="text-align: left">boolean</td>
+<td style="text-align: left">The result of totp verification</td>
+</tr>
+</tbody>
+</table>
+
 <p><a name="mock-server"></a></p>
 
-<h1 id="toc_89">Mock Server</h1>
+<h1 id="toc_94">Mock Server</h1>
 
-<h2 id="toc_90">Setup Configuration</h2>
+<h2 id="toc_95">Setup Configuration</h2>
 
 <blockquote>
 <p>Set following configuration in mockserver.app.conf</p>
@@ -1546,7 +1622,7 @@ kbd {
 api_code=&quot;&quot;
 api_secret=&quot;&quot;</code></pre></div>
 
-<h2 id="toc_91">Register mock server URL</h2>
+<h2 id="toc_96">Register mock server URL</h2>
 
 <blockquote>
 <p>Operate on web admin console</p>
@@ -1556,7 +1632,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <div><pre><code class="language-none">http://localhost:8892/v1/mock/callback</code></pre></div>
 
-<h2 id="toc_92">How to compile</h2>
+<h2 id="toc_97">How to compile</h2>
 
 <ul>
 <li>Put sample code to {YOUR_GO_PATH}/github.com/cybavo/AUTH_MOCK_SERVER</li>
@@ -1571,11 +1647,11 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-testing-commands"></a></p>
 
-<h2 id="toc_93">CURL Testing Commands</h2>
+<h2 id="toc_98">CURL Testing Commands</h2>
 
 <p><a name="curl-register-new-user"></a></p>
 
-<h4 id="toc_94">Register a new user</h4>
+<h4 id="toc_99">Register a new user</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
 &quot;http://localhost:8892/v1/mock/users&quot;</code></pre></div>
@@ -1586,7 +1662,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-pair-device"></a></p>
 
-<h4 id="toc_95">Pair device</h4>
+<h4 id="toc_100">Pair device</h4>
 
 <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
 
@@ -1596,7 +1672,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-setup-pin-code"></a></p>
 
-<h4 id="toc_96">Setup PIN code</h4>
+<h4 id="toc_101">Setup PIN code</h4>
 
 <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/users/pin?account=johndoe&quot;</code></pre></div>
 
@@ -1606,7 +1682,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-get-devices"></a></p>
 
-<h4 id="toc_97">Get devices</h4>
+<h4 id="toc_102">Get devices</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
 
@@ -1616,7 +1692,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-unpair-devices"></a></p>
 
-<h4 id="toc_98">Remove devices</h4>
+<h4 id="toc_103">Remove devices</h4>
 
 <div><pre><code class="language-none">curl -X DELETE -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
 &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
@@ -1627,7 +1703,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-send-push"></a></p>
 
-<h4 id="toc_99">Send push</h4>
+<h4 id="toc_104">Send push</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
 &quot;http://localhost:8892/v1/mock/devices/2fa?account=johndoe&quot;</code></pre></div>
@@ -1638,10 +1714,10 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-get-device-2fa"></a></p>
 
-<h4 id="toc_100">Get device 2FA</h4>
+<h4 id="toc_105">Get device 2FA</h4>
 
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;start_index=FROM&amp;request_number=COUNT&quot;
-curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;order_id=ORDER_ID&quot;</code></pre></div>
+<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;start_index=FROM&amp;request_number=COUNT&quot;
+curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;order_id=ORDER_ID&quot;</code></pre></div>
 
 <ul>
 <li><a href="#get-device-2fa">API definition</a></li>
@@ -1649,7 +1725,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 
 <p><a name="curl-cancel-device-2fa"></a></p>
 
-<h4 id="toc_101">Cancel device 2FA</h4>
+<h4 id="toc_106">Cancel device 2FA</h4>
 
 <div><pre><code class="language-none">curl -X DELETE &quot;http://localhost:8892/v1/mock/users/2fa/ORDER_ID?account=Erline&quot;</code></pre></div>
 
@@ -1659,7 +1735,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 
 <p><a name="curl-query-user-info"></a></p>
 
-<h4 id="toc_102">Query user info</h4>
+<h4 id="toc_107">Query user info</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/me?account=johndoe&quot;</code></pre></div>
 
@@ -1669,7 +1745,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 
 <p><a name="curl-query-callback-status"></a></p>
 
-<h4 id="toc_103">Query Callback Status</h4>
+<h4 id="toc_108">Query callback status</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
 &quot;http://localhost:8892/v1/mock/order/status?account=johndoe&quot;</code></pre></div>
@@ -1678,13 +1754,23 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 <li><a href="#query-callback-status">API definition</a></li>
 </ul>
 
-<h5 id="toc_104"><a href="#table-of-contents">Back to top</a></h5>
+<p><a name="curl-verify-user-totp"></a></p>
 
-<h1 id="toc_105">Appendix</h1>
+<h4 id="toc_109">Verify user TOTP</h4>
+
+<div><pre><code class="language-none">curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
+
+<ul>
+<li><a href="#verify-user-totp">API definition</a></li>
+</ul>
+
+<h5 id="toc_110"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_111">Appendix</h1>
 
 <p><a name="callback-definition"></a></p>
 
-<h2 id="toc_106">Callback Definition</h2>
+<h2 id="toc_112">Callback Definition</h2>
 
 <table>
   <tr>
@@ -1725,11 +1811,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
   </tr>
 </table>
 
-<h5 id="toc_107"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_113"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="platform-definition"></a></p>
 
-<h2 id="toc_108">Platform Definition</h2>
+<h2 id="toc_114">Platform Definition</h2>
 
 <table>
 <thead>
@@ -1755,11 +1841,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_109"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_115"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="action-definition"></a></p>
 
-<h2 id="toc_110">Action Definition</h2>
+<h2 id="toc_116">Action Definition</h2>
 
 <table>
 <thead>
@@ -1789,11 +1875,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_111"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_117"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="user-action-definition"></a></p>
 
-<h2 id="toc_112">User Action Definition</h2>
+<h2 id="toc_118">User Action Definition</h2>
 
 <table>
 <thead>
@@ -1819,11 +1905,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_113"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_119"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-type-definition"></a></p>
 
-<h2 id="toc_114">2FA Type Definition</h2>
+<h2 id="toc_120">2FA Type Definition</h2>
 
 <table>
 <thead>
@@ -1849,11 +1935,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_115"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_121"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-state-definition"></a></p>
 
-<h2 id="toc_116">2FA State Definition</h2>
+<h2 id="toc_122">2FA State Definition</h2>
 
 <table>
 <thead>
@@ -1887,11 +1973,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_117"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_123"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="rule-type-definition"></a></p>
 
-<h2 id="toc_118">Rule Type Definition</h2>
+<h2 id="toc_124">Rule Type Definition</h2>
 
 <table>
 <thead>
@@ -1917,11 +2003,11 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_119"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_125"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="common-errors"></a></p>
 
-<h2 id="toc_120">Common Errors</h2>
+<h2 id="toc_126">Common Errors</h2>
 
 <table>
 <thead>
@@ -1961,7 +2047,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account= johndoe&amp;o
 </tbody>
 </table>
 
-<h5 id="toc_121"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_127"><a href="#table-of-contents">Back to top</a></h5>
 
 
 

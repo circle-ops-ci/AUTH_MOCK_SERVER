@@ -179,6 +179,10 @@ type GetCallbackStatusResponse struct {
 	OrderStatus []OrderStatus `json:"order_status"`
 }
 
+type UserTotpVerifyResponse struct {
+	Result bool `json:"result"`
+}
+
 const (
 	BehaviorResultPending = 0
 	BehaviorResultReject  = 1
@@ -376,5 +380,21 @@ func GetCallbackStatus(request *GetCallbackStatusRequest, qs []string) (response
 	}
 
 	logs.Debug("GetCallbackStatus() => ", response)
+	return
+}
+
+func UserTotpVerify(qs []string) (response *UserTotpVerifyResponse, err error) {
+	resp, err := makeRequest("GET", "/v1/api/users/totpverify", qs, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &UserTotpVerifyResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("UserTotpVerify() => ", response)
 	return
 }
