@@ -179,6 +179,14 @@ type GetCallbackStatusResponse struct {
 	OrderStatus []OrderStatus `json:"order_status"`
 }
 
+type SendEmailOTPRequest struct {
+	Url      string `json:"url"`
+	Duration int    `json:"duration"`
+}
+
+type SendEmailOTPResponse struct {
+}
+
 const (
 	BehaviorResultPending = 0
 	BehaviorResultReject  = 1
@@ -376,5 +384,26 @@ func GetCallbackStatus(request *GetCallbackStatusRequest, qs []string) (response
 	}
 
 	logs.Debug("GetCallbackStatus() => ", response)
+	return
+}
+
+func SendEmailOTP(request *SendEmailOTPRequest, qs []string) (response *SendEmailOTPResponse, err error) {
+	jsonRequest, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := makeRequest("POST", "/v1/api/users/emailotp", qs, jsonRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &SendEmailOTPResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("SendEmailOTP() => ", response)
 	return
 }

@@ -259,3 +259,27 @@ func (c *OuterController) GetCallbackStatus() {
 
 	c.Data["json"] = resp
 }
+
+// @router /users/emailotp [post]
+func (c *OuterController) SendEmailOTP() {
+
+	defer c.ServeJSON()
+
+	var request api.SendEmailOTPRequest
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+	qs := getQueryString(c.Ctx)
+	if qs == nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
+	}
+
+	resp, err := api.SendEmailOTP(&request, qs)
+	if err != nil {
+		logs.Error("SendEmailOTP => ", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
