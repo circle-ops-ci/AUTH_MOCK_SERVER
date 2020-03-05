@@ -187,6 +187,10 @@ type SendEmailOTPRequest struct {
 type SendEmailOTPResponse struct {
 }
 
+type UserTotpVerifyResponse struct {
+	Result bool `json:"result"`
+}
+
 const (
 	BehaviorResultPending = 0
 	BehaviorResultReject  = 1

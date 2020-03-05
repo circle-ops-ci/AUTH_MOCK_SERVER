@@ -13,6 +13,7 @@
 	- [Cancel Device 2FA](#cancel-device-2fa)
 	- [Get User Info](#get-user-info)
 	- [Query Callback Status](#query-callback-status)
+	- [Verify User TOTP](#verify-user-totp)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -726,6 +727,51 @@ The response includes the following parameters:
 | addon | object | The custom fields of request |
 
 
+<a name="verify-user-totp"></a>
+## Verify User TOTP
+
+Verify user's totp.
+
+**`GET`** /v1/api/users/totpverify?account=`USER_ACCOUNT`&code=`TOTP`
+
+- [Sample curl command](#curl-verify-user-totp)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/totpverify?account=johndoe&code=539826
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+| code | int | totp |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "result": true
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | boolean | The result of totp verification |
+
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -807,8 +853,8 @@ curl -X POST -d '{"type":1,"title":"PUSH TITLE","body":"PUSH DESC","data":{"fiel
 <a name="curl-get-device-2fa"></a>
 #### Get device 2FA
 ```
-curl -X GET "http://localhost:8892/v1/mock/users/2fa?account= johndoe&start_index=FROM&request_number=COUNT"
-curl -X GET "http://localhost:8892/v1/mock/users/2fa?account= johndoe&order_id=ORDER_ID"
+curl -X GET "http://localhost:8892/v1/mock/users/2fa?account=johndoe&start_index=FROM&request_number=COUNT"
+curl -X GET "http://localhost:8892/v1/mock/users/2fa?account=johndoe&order_id=ORDER_ID"
 ```
 - [API definition](#get-device-2fa)
 
@@ -827,12 +873,19 @@ curl -X GET "http://localhost:8892/v1/mock/users/me?account=johndoe"
 - [API definition](#query-user-info)
 
 <a name="curl-query-callback-status"></a>
-#### Query Callback Status
+#### Query callback status
 ```
 curl -X POST -d '{"order_ids":[10000000002,10000000003]}' \
 "http://localhost:8892/v1/mock/order/status?account=johndoe"
 ```
 - [API definition](#query-callback-status)
+
+<a name="curl-verify-user-totp"></a>
+#### Verify user TOTP
+```
+curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&code=539826
+```
+- [API definition](#verify-user-totp)
 
 ##### [Back to top](#table-of-contents)
 
