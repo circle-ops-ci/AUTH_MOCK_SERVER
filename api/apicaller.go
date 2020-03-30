@@ -88,16 +88,10 @@ func makeRequest(method string, api string, params []string, postBody []byte) ([
 	}
 
 	if res.StatusCode != 200 {
-		showErrorMessage(body)
-		return body, errors.New(res.Status)
+		result := &ErrorCodeResponse{}
+		_ = json.Unmarshal(body, result)
+		msg := fmt.Sprintf("%s, Error: %s", res.Status, result.String())
+		return body, errors.New(msg)
 	}
 	return body, nil
-}
-
-func showErrorMessage(resp []byte) {
-	errResp := &ErrorCodeResponse{}
-	err := json.Unmarshal(resp, errResp)
-	if err == nil {
-		logs.Debug(fmt.Sprintf("Error: %s (code: %d)", errResp.ErrMsg, errResp.ErrCode))
-	}
 }

@@ -63,8 +63,21 @@ const (
 )
 
 type ErrorCodeResponse struct {
-	ErrMsg  string `json:"error,omitempty"`
-	ErrCode int    `json:"error_code,omitempty"`
+	ErrMsg          string `json:"error,omitempty"`
+	ErrCode         int    `json:"error_code,omitempty"`
+	Message         string `json:"message,omitempty"`
+	ServerTimestamp int64  `json:"server_timestamp,omitempty"`
+}
+
+func (m *ErrorCodeResponse) String() string {
+	var msg, time string
+	if m.Message != "" {
+		msg = fmt.Sprintf(" (msg:%s)", m.Message)
+	}
+	if m.ServerTimestamp != 0 {
+		time = fmt.Sprintf(" (timestamp:%d)", m.ServerTimestamp)
+	}
+	return fmt.Sprintf("%s%s%s (code:%d)", m.ErrMsg, msg, time, m.ErrCode)
 }
 
 type RegisterUserRequest struct {
