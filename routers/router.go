@@ -16,18 +16,15 @@ import (
 )
 
 func init() {
-	InitUpdateSRVNameSpace()
-}
-
-func InitUpdateSRVNameSpace() {
-	ns :=
-		beego.NewNamespace("/v1",
-			beego.NSNamespace("/mock",
-				beego.NSInclude(
-					&controllers.OuterController{},
-					&controllers.CallbackController{},
-				),
-			),
-		)
-	beego.AddNamespace(ns)
+	beego.Router("/v1/mock/users", &controllers.OuterController{}, "POST:RegisterUser")
+	beego.Router("/v1/mock/devices", &controllers.OuterController{}, "POST:PairDevice")
+	beego.Router("/v1/mock/users/pin", &controllers.OuterController{}, "POST:SetupPIN")
+	beego.Router("/v1/mock/devices", &controllers.OuterController{}, "GET:GetDevices")
+	beego.Router("/v1/mock/devices", &controllers.OuterController{}, "DELETE:UnpairDevices")
+	beego.Router("/v1/mock/devices/2fa", &controllers.OuterController{}, "POST:SendPushToDevices")
+	beego.Router("/v1/mock/users/2fa", &controllers.OuterController{}, "GET:GetDevice2FA")
+	beego.Router("/v1/mock/users/2fa/:token", &controllers.OuterController{}, "DELETE:CancelDevice2FA")
+	beego.Router("/v1/mock/users/me", &controllers.OuterController{}, "GET:GetUserInfo")
+	beego.Router("/v1/mock/order/status", &controllers.OuterController{}, "POST:GetCallbackStatus")
+	beego.Router("/v1/mock/users/totpverify", &controllers.OuterController{}, "GET:UserTotpVerify")
 }
