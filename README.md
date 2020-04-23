@@ -14,6 +14,7 @@
 	- [Get User Info](#get-user-info)
 	- [Query Callback Status](#query-callback-status)
 	- [Verify User TOTP](#verify-user-totp)
+  - [Send Login OTP Email](#send-login-otp)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -49,7 +50,8 @@ An example of the request:
   "name": "JOHN DOE",
   "account": "johndoe",
   "email": "johndoe@example.com",
-  "locale": "en"
+  "locale": "en",
+  "bound_limit": 1
 }
 ```
 
@@ -63,6 +65,7 @@ The request includes the following parameters:
 | account | string | User account (SYSTEM UNIQUE ID) |
 | email | string | User email (OPTIONAL) |
 | locale | string | User preference locale (en, zh-TW, zh-CN, ja, ko) |
+| bound_limit | int | The upper bound of binding deivce. <=0: unlimited |
 
 > The `account` field is a system-wise unique ID
 
@@ -771,6 +774,51 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | result | boolean | The result of totp verification |
 
+<a name="send-login-otp"></a>
+## Send Login OTP to Email
+
+Users click the link in email to login
+
+**`POST`** /v1/api/users/emailotp?account=`USER_ACCOUNT`
+
+- [Sample curl command](#curl-send-login-otp)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/emailotp?account=johndoe
+```
+
+###### Post body
+
+```json
+{
+  "url": "https://serviceprovider.com.tw/redirect",
+  "duration": 30,
+}
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+}
+```
+
 
 <a name="mock-server"></a>
 # Mock Server
@@ -886,6 +934,14 @@ curl -X POST -d '{"order_ids":[10000000002,10000000003]}' \
 curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&code=539826
 ```
 - [API definition](#verify-user-totp)
+
+<a name="curl-send-login-otp"></a>
+#### Send Login OTP to Email
+```
+curl -X POST -d '{"url":"http://localhost:8080", "duration":10}' \
+http://localhost:8892/v1/mock/users/emailotp?account=johndoe
+```
+- [API definition](#send-login-otp)
 
 ##### [Back to top](#table-of-contents)
 
