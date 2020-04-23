@@ -27,4 +27,5 @@ func init() {
 	beego.Router("/v1/mock/users/me", &controllers.OuterController{}, "GET:GetUserInfo")
 	beego.Router("/v1/mock/order/status", &controllers.OuterController{}, "POST:GetCallbackStatus")
 	beego.Router("/v1/mock/users/totpverify", &controllers.OuterController{}, "GET:UserTotpVerify")
+	beego.Router("/v1/mock/users/emailotp", &controllers.OuterController{}, "POST:SendEmailOTP")
 }
