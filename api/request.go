@@ -411,3 +411,19 @@ func SendEmailOTP(request *SendEmailOTPRequest, qs []string) (response *SendEmai
 	logs.Debug("SendEmailOTP() => ", response)
 	return
 }
+
+func UserTotpVerify(qs []string) (response *UserTotpVerifyResponse, err error) {
+	resp, err := makeRequest("GET", "/v1/api/users/totpverify", qs, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &UserTotpVerifyResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("UserTotpVerify() => ", response)
+	return
+}

@@ -283,3 +283,21 @@ func (c *OuterController) SendEmailOTP() {
 
 	c.Data["json"] = resp
 }
+
+// @router /users/totpverify [get]
+func (c *OuterController) UserTotpVerify() {
+	defer c.ServeJSON()
+
+	qs := getQueryString(c.Ctx)
+	if qs == nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
+	}
+
+	resp, err := api.UserTotpVerify(qs)
+	if err != nil {
+		logs.Error("UserTotpVerify failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
