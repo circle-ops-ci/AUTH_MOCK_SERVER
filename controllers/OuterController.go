@@ -301,3 +301,22 @@ func (c *OuterController) UserTotpVerify() {
 
 	c.Data["json"] = resp
 }
+
+// @router /users/emailotp/verify [get]
+func (c *OuterController) VerifyEmailOTP() {
+
+	defer c.ServeJSON()
+
+	qs := getQueryString(c.Ctx)
+	if qs == nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
+	}
+
+	resp, err := api.VerifyEmailOTP(qs)
+	if err != nil {
+		logs.Error("VerifyEmailOTP => ", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}

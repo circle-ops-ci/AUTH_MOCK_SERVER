@@ -15,6 +15,7 @@
 	- [Query Callback Status](#query-callback-status)
 	- [Verify User TOTP](#verify-user-totp)
   - [Send Login OTP Email](#send-login-otp)
+  - [Verify Email Login OTP](#verify-login-otp)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -819,6 +820,44 @@ An example of a successful response:
 }
 ```
 
+<a name="verify-login-otp"></a>
+## Verify Login Email OTP
+
+Users click the link in email to login, and service provider retrive login token to verify
+
+**`GET`** /v1/api/users/emailotp/verify?account=`USER_ACCOUNT`&token=`TOKEN`
+
+- [Sample curl command](#curl-verify-login-otp)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+| token | string | Token in email |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+    "result": 1
+}
+```
+
 
 <a name="mock-server"></a>
 # Mock Server
@@ -942,6 +981,13 @@ curl -X POST -d '{"url":"http://localhost:8080", "duration":10}' \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 ```
 - [API definition](#send-login-otp)
+
+<a name="curl-verify-login-otp"></a>
+#### Send Login OTP to Email
+```
+curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF"
+```
+- [API definition](#verify-login-otp)
 
 ##### [Back to top](#table-of-contents)
 

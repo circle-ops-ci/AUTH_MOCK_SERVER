@@ -204,6 +204,10 @@ type UserTotpVerifyResponse struct {
 	Result bool `json:"result"`
 }
 
+type UserLoginOTPVerifyResponse struct {
+	Result int `json:"result"`
+}
+
 const (
 	BehaviorResultPending = 0
 	BehaviorResultReject  = 1
@@ -438,5 +442,22 @@ func UserTotpVerify(qs []string) (response *UserTotpVerifyResponse, err error) {
 	}
 
 	logs.Debug("UserTotpVerify() => ", response)
+	return
+}
+
+func VerifyEmailOTP(qs []string) (response *UserLoginOTPVerifyResponse, err error) {
+
+	resp, err := makeRequest("GET", "/v1/api/users/emailotp/verify", qs, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &UserLoginOTPVerifyResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("VerifyEmailOTP() => ", response)
 	return
 }
