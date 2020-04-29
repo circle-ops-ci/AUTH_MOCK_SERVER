@@ -320,3 +320,47 @@ func (c *OuterController) VerifyEmailOTP() {
 
 	c.Data["json"] = resp
 }
+
+// @router /users/info/email[post]
+func (c *OuterController) CheckUserInfoEmail() {
+
+	defer c.ServeJSON()
+
+	var request api.CheckUserInfoEmailRequest
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	qs := getQueryString(c.Ctx)
+	if qs == nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
+	}
+
+	resp, err := api.CheckUserInfoEmail(&request, qs)
+	if err != nil {
+		logs.Error("CheckUserInfoEmail => ", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
+
+// @router /users/info/verify[get]
+func (c *OuterController) VerifyUserOTP() {
+
+	defer c.ServeJSON()
+
+	qs := getQueryString(c.Ctx)
+	if qs == nil {
+		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
+	}
+
+	resp, err := api.VerifyUserOTP(qs)
+	if err != nil {
+		logs.Error("VerifyUserOTP => ", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}

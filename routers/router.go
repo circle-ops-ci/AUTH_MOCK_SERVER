@@ -29,4 +29,6 @@ func init() {
 	beego.Router("/v1/mock/users/totpverify", &controllers.OuterController{}, "GET:UserTotpVerify")
 	beego.Router("/v1/mock/users/emailotp", &controllers.OuterController{}, "POST:SendEmailOTP")
 	beego.Router("/v1/mock/users/emailotp/verify", &controllers.OuterController{}, "GET:VerifyEmailOTP")
+	beego.Router("/v1/mock/users/info/email", &controllers.OuterController{}, "POST:CheckUserInfoEmail")
+	beego.Router("/v1/mock/users/info/verify", &controllers.OuterController{}, "GET:VerifyUserOTP")
 }

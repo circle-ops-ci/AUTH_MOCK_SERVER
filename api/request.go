@@ -208,6 +208,23 @@ type UserLoginOTPVerifyResponse struct {
 	Result int `json:"result"`
 }
 
+type CheckUserInfoEmailRequest struct {
+	Mode        int    `json:"mode"`
+	Length      int    `json:"length"`
+	OTPType     int    `json:"otp_type"`
+	Duration    int    `json:"duration"`
+	RedirectUrl string `json:"redirect_url"`
+	State       string `json:"state"`
+}
+
+type CheckUserInfoEmailResponse struct {
+	ActionToken string `json:"action_token"`
+}
+
+type VerifyUserOTPResponse struct {
+	Result bool `json:"result"`
+}
+
 const (
 	BehaviorResultPending = 0
 	BehaviorResultReject  = 1
@@ -459,5 +476,45 @@ func VerifyEmailOTP(qs []string) (response *UserLoginOTPVerifyResponse, err erro
 	}
 
 	logs.Debug("VerifyEmailOTP() => ", response)
+	return
+}
+
+func CheckUserInfoEmail(request *CheckUserInfoEmailRequest, qs []string) (response *CheckUserInfoEmailResponse, err error) {
+
+	jsonRequest, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := makeRequest("POST", "/v1/api/users/info/email", qs, jsonRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &CheckUserInfoEmailResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("CheckUserInfoEmail() => ", response)
+	return
+}
+
+func VerifyUserOTP(qs []string) (response *VerifyUserOTPResponse, err error) {
+
+	logs.Debug("VerifyUserOTP() qs %#v", qs)
+	resp, err := makeRequest("GET", "/v1/api/users/info/verify", qs, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response = &VerifyUserOTPResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return nil, err
+	}
+
+	logs.Debug("VerifyUserOTP() => ", response)
 	return
 }
