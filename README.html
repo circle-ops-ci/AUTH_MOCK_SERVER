@@ -1637,9 +1637,38 @@ kbd {
 
 <h6 id="toc_97">Post body</h6>
 
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">duration</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Verfiication code will expire after x minute</td>
+</tr>
+<tr>
+<td style="text-align: left">url</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">URL in email with verification code and state</td>
+</tr>
+<tr>
+<td style="text-align: left">state</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Defined by service provider. The server will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
+</tr>
+</tbody>
+</table>
+
 <div><pre><code class="language-javascript">{
   &quot;url&quot;: &quot;https://serviceprovider.com.tw/redirect&quot;,
   &quot;duration&quot;: 30,
+  &quot;state&quot;: &quot;7cg2v2y5j8NrFjCcvfGhrfP1k4Gsc1rd2rVs2yTYrBK3&quot;
 }</code></pre></div>
 
 <p>The request includes the following parameters:</p>
@@ -1669,6 +1698,7 @@ kbd {
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
+  &quot;action_token&quot;: &quot;Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&quot;
 }</code></pre></div>
 
 <p><a name="verify-login-otp"></a></p>
@@ -1677,7 +1707,7 @@ kbd {
 
 <p>Users click the link in email to login, and service provider retrive login token to verify</p>
 
-<p><strong><code>GET</code></strong> /v1/api/users/emailotp/verify?account=<code>USER_ACCOUNT</code>&amp;token=<code>TOKEN</code></p>
+<p><strong><code>GET</code></strong> /v1/api/users/emailotp/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
 
 <ul>
 <li><a href="#curl-verify-login-otp">Sample curl command</a></li>
@@ -1689,7 +1719,7 @@ kbd {
 
 <h6 id="toc_102">API with query string</h6>
 
-<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF</code></pre></div>
+<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF</code></pre></div>
 
 <p>The request includes the following parameters:</p>
 
@@ -1711,6 +1741,11 @@ kbd {
 <td style="text-align: left">Requester account</td>
 </tr>
 <tr>
+<td style="text-align: left">actiontoken</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">In resposne of Send Login OTP to Email</td>
+</tr>
+<tr>
 <td style="text-align: left">token</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">Token in email</td>
@@ -1723,7 +1758,7 @@ kbd {
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-    &quot;result&quot;: 1
+    &quot;result&quot;: true
 }</code></pre></div>
 
 <p><a name="send-verification-email"></a></p>
@@ -2090,7 +2125,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <h4 id="toc_132">Send Login OTP to Email</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10}&#39; \
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <ul>
@@ -2101,7 +2136,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <h4 id="toc_133">Send Login OTP to Email</h4>
 
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&quot;</code></pre></div>
+<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
 
 <ul>
 <li><a href="#verify-login-otp">API definition</a></li>
@@ -2130,11 +2165,22 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <h5 id="toc_136"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_137">Appendix</h1>
+<p><a name="other-language-versions"></a></p>
+
+<h2 id="toc_137">Other Language Versions</h2>
+
+<ul>
+<li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_JAVASCRIPT">Javascript</a></li>
+<li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_PHP">PHP</a></li>
+</ul>
+
+<h5 id="toc_138"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_139">Appendix</h1>
 
 <p><a name="callback-definition"></a></p>
 
-<h2 id="toc_138">Callback Definition</h2>
+<h2 id="toc_140">Callback Definition</h2>
 
 <table>
   <tr>
@@ -2175,11 +2221,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
   </tr>
 </table>
 
-<h5 id="toc_139"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_141"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="platform-definition"></a></p>
 
-<h2 id="toc_140">Platform Definition</h2>
+<h2 id="toc_142">Platform Definition</h2>
 
 <table>
 <thead>
@@ -2205,11 +2251,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_141"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_143"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="action-definition"></a></p>
 
-<h2 id="toc_142">Action Definition</h2>
+<h2 id="toc_144">Action Definition</h2>
 
 <table>
 <thead>
@@ -2239,11 +2285,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_143"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_145"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="user-action-definition"></a></p>
 
-<h2 id="toc_144">User Action Definition</h2>
+<h2 id="toc_146">User Action Definition</h2>
 
 <table>
 <thead>
@@ -2269,11 +2315,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_145"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_147"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-type-definition"></a></p>
 
-<h2 id="toc_146">2FA Type Definition</h2>
+<h2 id="toc_148">2FA Type Definition</h2>
 
 <table>
 <thead>
@@ -2299,11 +2345,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_147"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_149"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-state-definition"></a></p>
 
-<h2 id="toc_148">2FA State Definition</h2>
+<h2 id="toc_150">2FA State Definition</h2>
 
 <table>
 <thead>
@@ -2337,11 +2383,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_149"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_151"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="rule-type-definition"></a></p>
 
-<h2 id="toc_150">Rule Type Definition</h2>
+<h2 id="toc_152">Rule Type Definition</h2>
 
 <table>
 <thead>
@@ -2367,11 +2413,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_151"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_153"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="common-errors"></a></p>
 
-<h2 id="toc_152">Common Errors</h2>
+<h2 id="toc_154">Common Errors</h2>
 
 <table>
 <thead>
@@ -2411,4 +2457,5 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_153"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_155"><a href="#table-of-contents">Back to top</a></h5>
+

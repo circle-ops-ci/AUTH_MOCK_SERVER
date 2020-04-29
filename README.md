@@ -799,10 +799,17 @@ An example of the request:
 
 ###### Post body
 
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| duration | int | Verfiication code will expire after x minute |
+| url | string | URL in email with verification code and state |
+| state | string | Defined by service provider. The server will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
+
 ```json
 {
   "url": "https://serviceprovider.com.tw/redirect",
   "duration": 30,
+  "state": "7cg2v2y5j8NrFjCcvfGhrfP1k4Gsc1rd2rVs2yTYrBK3"
 }
 ```
 
@@ -820,6 +827,7 @@ An example of a successful response:
 
 ```json
 {
+  "action_token": "Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2"
 }
 ```
 
@@ -828,7 +836,7 @@ An example of a successful response:
 
 Users click the link in email to login, and service provider retrive login token to verify
 
-**`GET`** /v1/api/users/emailotp/verify?account=`USER_ACCOUNT`&token=`TOKEN`
+**`GET`** /v1/api/users/emailotp/verify?account=`USER_ACCOUNT`&actiontoken=`ACTION_TOKEN`&token=`TOKEN`
 
 - [Sample curl command](#curl-verify-login-otp)
 
@@ -839,7 +847,7 @@ An example of the request:
 ###### API with query string
 
 ```
-/v1/api/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF
+/v1/api/users/emailotp/verify?account=johndoe&actiontoken=Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF
 ```
 
 The request includes the following parameters:
@@ -849,6 +857,7 @@ The request includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | account | string | Requester account |
+| actiontoken | string | In resposne of Send Login OTP to Email |
 | token | string | Token in email |
 
 ##### Response Format
@@ -857,7 +866,7 @@ An example of a successful response:
 
 ```json
 {
-    "result": 1
+    "result": true
 }
 ```
 
@@ -1085,7 +1094,7 @@ curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&code=539826
 <a name="curl-send-login-otp"></a>
 #### Send Login OTP to Email
 ```
-curl -X POST -d '{"url":"http://localhost:8080", "duration":10}' \
+curl -X POST -d '{"url":"http://localhost:8080", "duration":10, "state":"nTG7MQ1hUcrR"}' \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 ```
 - [API definition](#send-login-otp)
@@ -1093,7 +1102,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 <a name="curl-verify-login-otp"></a>
 #### Send Login OTP to Email
 ```
-curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF"
+curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj"
 ```
 - [API definition](#verify-login-otp)
 
