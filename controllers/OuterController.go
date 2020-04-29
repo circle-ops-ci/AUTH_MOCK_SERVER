@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The CYBAVO developers
+// Copyright (c) 2018-2020 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -12,7 +12,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -63,262 +62,196 @@ func (c *OuterController) AbortWithError(status int, err error) {
 func (c *OuterController) RegisterUser() {
 	defer c.ServeJSON()
 
-	var request api.RegisterUserRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.RegisterUser(&request)
+	resp, err := api.MakeRequest("POST", "/v1/api/users", nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("RegisterUser failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /devices [post]
 func (c *OuterController) PairDevice() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.PairDevice(qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/devices", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("PairDevice failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/pin [post]
 func (c *OuterController) SetupPIN() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.SetupPIN(qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/users/pin", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("SetupPIN failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /devices [get]
 func (c *OuterController) GetDevices() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.GetDevices(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/devices", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("GetDevices failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /devices [delete]
 func (c *OuterController) UnpairDevices() {
 	defer c.ServeJSON()
 
-	var request api.UnpairDevicesRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.UnpairDevices(&request, qs)
+	resp, err := api.MakeRequest("DELETE", "/v1/api/devices", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("UnpairDevices failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /devices/2fa [post]
 func (c *OuterController) SendPushToDevices() {
 	defer c.ServeJSON()
 
-	var request api.SendPushToDevicesRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.SendPushToDevices(&request, qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/devices/2fa", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("SendPushToDevices failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/2fa [get]
 func (c *OuterController) GetDevice2FA() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.GetDevice2FA(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/users/2fa", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("GetDevice2FA failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/2fa/:token [delete]
 func (c *OuterController) CancelDevice2FA() {
 	defer c.ServeJSON()
 
-	token := c.Ctx.Input.Param(":token")
-	if token == "" {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.CancelDevice2FA(token, qs)
+	resp, err := api.MakeRequest("DELETE",
+		fmt.Sprintf("/v1/api/users/2fa/%s", c.Ctx.Input.Param(":token")), getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("CancelDevice2FA failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/me [get]
 func (c *OuterController) GetUserInfo() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.GetUserInfo(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/users/me", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("GetUserInfo failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /order/status [post]
 func (c *OuterController) GetCallbackStatus() {
 	defer c.ServeJSON()
 
-	var request api.GetCallbackStatusRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.GetCallbackStatus(&request, qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/order/status", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("GetCallbackStatus failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/emailotp [post]
 func (c *OuterController) SendEmailOTP() {
-
 	defer c.ServeJSON()
 
-	var request api.SendEmailOTPRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.SendEmailOTP(&request, qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/users/emailotp", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("SendEmailOTP => ", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/totpverify [get]
 func (c *OuterController) UserTotpVerify() {
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.UserTotpVerify(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/users/totpverify", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("UserTotpVerify failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/emailotp/verify [get]
 func (c *OuterController) VerifyEmailOTP() {
-
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.VerifyEmailOTP(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/users/emailotp/verify", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("VerifyEmailOTP => ", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/info/email[post]
@@ -326,24 +259,15 @@ func (c *OuterController) CheckUserInfoEmail() {
 
 	defer c.ServeJSON()
 
-	var request api.CheckUserInfoEmailRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.CheckUserInfoEmail(&request, qs)
+	resp, err := api.MakeRequest("POST", "/v1/api/users/info/email", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("CheckUserInfoEmail => ", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @router /users/info/verify[get]
@@ -351,16 +275,13 @@ func (c *OuterController) VerifyUserOTP() {
 
 	defer c.ServeJSON()
 
-	qs := getQueryString(c.Ctx)
-	if qs == nil {
-		c.AbortWithError(http.StatusBadRequest, errors.New("no required info"))
-	}
-
-	resp, err := api.VerifyUserOTP(qs)
+	resp, err := api.MakeRequest("GET", "/v1/api/users/info/verify", getQueryString(c.Ctx), nil)
 	if err != nil {
-		logs.Error("VerifyUserOTP => ", err)
+		logs.Error("CheckUserInfoEmail => ", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }

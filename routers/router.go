@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The CYBAVO developers
+// Copyright (c) 2018-2020 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -31,4 +31,5 @@ func init() {
 	beego.Router("/v1/mock/users/emailotp/verify", &controllers.OuterController{}, "GET:VerifyEmailOTP")
 	beego.Router("/v1/mock/users/info/email", &controllers.OuterController{}, "POST:CheckUserInfoEmail")
 	beego.Router("/v1/mock/users/info/verify", &controllers.OuterController{}, "GET:VerifyUserOTP")
+	beego.Router("/v1/mock/callback", &controllers.CallbackController{}, "POST:Callback")
 }

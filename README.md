@@ -21,6 +21,7 @@
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
+	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
 	- [API Callback List](#api-callback-list)
@@ -1114,6 +1115,12 @@ curl -X GET -d "http://localhost:8892/v1/mock/users/info/verify?account=johndoe&
 
 ##### [Back to top](#table-of-contents)
 
+<a name="other-language-versions"></a>
+## Other Language Versions
+- [Javascript](https://github.com/CYBAVO/AUTH_MOCK_SERVER_JAVASCRIPT)
+- [PHP](https://github.com/CYBAVO/AUTH_MOCK_SERVER_PHP)
+
+##### [Back to top](#table-of-contents)
 
 # Appendix
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The CYBAVO developers
+// Copyright (c) 2018-2020 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -30,6 +30,24 @@ var baseURL = beego.AppConfig.DefaultString("api_server_url", "")
 var APICode = beego.AppConfig.DefaultString("api_code", "")
 var APISecret = beego.AppConfig.DefaultString("api_secret", "")
 
+type ErrorCodeResponse struct {
+	ErrMsg          string `json:"error,omitempty"`
+	ErrCode         int    `json:"error_code,omitempty"`
+	Message         string `json:"message,omitempty"`
+	ServerTimestamp int64  `json:"server_timestamp,omitempty"`
+}
+
+func (m *ErrorCodeResponse) String() string {
+	var msg, time string
+	if m.Message != "" {
+		msg = fmt.Sprintf(" (msg:%s)", m.Message)
+	}
+	if m.ServerTimestamp != 0 {
+		time = fmt.Sprintf(" (timestamp:%d)", m.ServerTimestamp)
+	}
+	return fmt.Sprintf("%s%s%s (code:%d)", m.ErrMsg, msg, time, m.ErrCode)
+}
+
 func buildChecksum(params []string, secret string, time int64, r string) string {
 	params = append(params, fmt.Sprintf("t=%d", time))
 	params = append(params, fmt.Sprintf("r=%s", r))
@@ -38,7 +56,7 @@ func buildChecksum(params []string, secret string, time int64, r string) string 
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(strings.Join(params, "&"))))
 }
 
-func makeRequest(method string, api string, params []string, postBody []byte) ([]byte, error) {
+func MakeRequest(method string, api string, params []string, postBody []byte) ([]byte, error) {
 	if method == "" || api == "" {
 		return nil, errors.New("invalid parameters")
 	}
@@ -71,8 +89,7 @@ func makeRequest(method string, api string, params []string, postBody []byte) ([
 	if postBody != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	logs.Debug(fmt.Sprintf("Request URL: %s, params: %s", req.URL.String(), strings.Join(params, "&")))
-	logs.Debug("Request URL:", req.URL.String())
+	logs.Debug(fmt.Sprintf("Request URL: %s", url))
 	logs.Debug("\tX-CHECKSUM:\t", req.Header.Get("X-CHECKSUM"))
 
 	client := &http.Client{}
@@ -86,7 +103,6 @@ func makeRequest(method string, api string, params []string, postBody []byte) ([
 	if err != nil {
 		return nil, err
 	}
-
 	if res.StatusCode != 200 {
 		result := &ErrorCodeResponse{}
 		_ = json.Unmarshal(body, result)
