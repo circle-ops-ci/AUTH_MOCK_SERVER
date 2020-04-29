@@ -16,6 +16,8 @@
 	- [Verify User TOTP](#verify-user-totp)
   - [Send Login OTP Email](#send-login-otp)
   - [Verify Email Login OTP](#verify-login-otp)
+  - [Send User Verification Email](#send-verification-email)
+  - [Check Verification Code](#check-verification-code)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -858,6 +860,111 @@ An example of a successful response:
 }
 ```
 
+<a name="send-verification-email"></a>
+## Send verification code to user's email
+
+Send verification code and redirect to service provider after user click link in email 
+
+**`POST`** /v1/api/users/info/email?account=`USER_ACCOUNT`
+
+- [Sample curl command](#curl-send-verification-email)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/emailotp/verify?account=johndoe
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+
+###### Post body
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| mode | int | verification type. 0: Number, 1: String |
+| length | int | The length of verification code |
+| otp_type | int | Defined by service provider. Only one verfiication code is enabled with same otp_type. |
+| duration | int | Verfiication code will expire after x minute |
+| redirect_url | string | URL in email with verification code and state |
+| state | string | Defined by service provider. The server will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
+
+```json
+{
+	"mode":1,
+	"length":32,
+	"otp_type":1,
+	"duration":10,
+	"redirect_url":"https://serviceprovider.com/user/active",
+	"state":"CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN"
+}
+```
+
+##### Response Format
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| action_token | string  | Verify verification code with this action token. |
+
+An example of a successful response:
+
+```json
+{
+  "action_token": "HnnTG7MQ1hUcrRtTFx9g4bHvogTCr48hMRbUqDxrjR2E"
+}
+```
+
+<a name="check-verification-code"></a>
+## Check verification code
+
+Check verification code
+
+**`GET`** /v1/api/users/info/verify?account=`USER_ACCOUNT`&actiontoken=`ACTION_TOKEN`&token=`TOKEN`
+
+- [Sample curl command](#curl-check-verification-code)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/emailotp/verify?account=johndoe&actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3Lz&token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+| actiontoken | string | In resposne of Send Verification Email |
+| token | string | Verification code |
+
+##### Response Format
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | bool  | Pass: TRUE, Failed: FALSE |
+
+An example of a successful response:
+
+```json
+{
+  "result": true
+}
+```
 
 <a name="mock-server"></a>
 # Mock Server
@@ -988,6 +1095,22 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF"
 ```
 - [API definition](#verify-login-otp)
+
+
+<a name="curl-send-verification-email"></a>
+#### Send verification code to user's email
+```
+curl -X POST -d '{"mode":1,"length":32,"otp_type":1,"duration":10,"redirect_url":"http://localhost:8080","state":"nTG7MQ1hUcrR"}' \
+"http://localhost:8892/v1/mock/users/info/email?account=johndoe"
+```
+- [API definition](#send-verification-email)
+
+<a name="curl-check-verification-code"></a>
+#### Check verification code
+```
+curl -X GET -d "http://localhost:8892/v1/mock/users/info/verify?account=johndoe&token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj"
+```
+- [API definition](#check-verification-code)
 
 ##### [Back to top](#table-of-contents)
 

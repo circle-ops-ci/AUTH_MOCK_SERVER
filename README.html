@@ -19,6 +19,9 @@
 <li><a href="#query-callback-status">Query Callback Status</a></li>
 <li><a href="#verify-user-totp">Verify User TOTP</a></li>
 <li><a href="#send-login-otp">Send Login OTP Email</a></li>
+<li><a href="#verify-login-otp">Verify Email Login OTP</a></li>
+<li><a href="#send-verification-email">Send User Verification Email</a></li>
+<li><a href="#check-verification-code">Check Verification Code</a></li>
 </ul></li>
 <li>Testing
 
@@ -1337,11 +1340,266 @@
 <div><pre><code class="language-javascript">{
 }</code></pre></div>
 
+<p><a name="verify-login-otp"></a></p>
+
+<h2 id="toc_100">Verify Login Email OTP</h2>
+
+<p>Users click the link in email to login, and service provider retrive login token to verify</p>
+
+<p><strong><code>GET</code></strong> /v1/api/users/emailotp/verify?account=<code>USER_ACCOUNT</code>&amp;token=<code>TOKEN</code></p>
+
+<ul>
+<li><a href="#curl-verify-login-otp">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_101">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_102">API with query string</h6>
+
+<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_103">Query string</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">account</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Requester account</td>
+</tr>
+<tr>
+<td style="text-align: left">token</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Token in email</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_104">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+    &quot;result&quot;: 1
+}</code></pre></div>
+
+<p><a name="send-verification-email"></a></p>
+
+<h2 id="toc_105">Send verification code to user&#39;s email</h2>
+
+<p>Send verification code and redirect to service provider after user click link in email </p>
+
+<p><strong><code>POST</code></strong> /v1/api/users/info/email?account=<code>USER_ACCOUNT</code></p>
+
+<ul>
+<li><a href="#curl-send-verification-email">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_106">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_107">API with query string</h6>
+
+<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_108">Query string</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">account</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Requester account</td>
+</tr>
+</tbody>
+</table>
+
+<h6 id="toc_109">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">mode</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">verification type. 0: Number, 1: String</td>
+</tr>
+<tr>
+<td style="text-align: left">length</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">The length of verification code</td>
+</tr>
+<tr>
+<td style="text-align: left">otp_type</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Defined by service provider. Only one verfiication code is enabled with same otp_type.</td>
+</tr>
+<tr>
+<td style="text-align: left">duration</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Verfiication code will expire after x minute</td>
+</tr>
+<tr>
+<td style="text-align: left">redirect_url</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">URL in email with verification code and state</td>
+</tr>
+<tr>
+<td style="text-align: left">state</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Defined by service provider. The server will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
+</tr>
+</tbody>
+</table>
+
+<div><pre><code class="language-javascript">{
+    &quot;mode&quot;:1,
+    &quot;length&quot;:32,
+    &quot;otp_type&quot;:1,
+    &quot;duration&quot;:10,
+    &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
+    &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
+}</code></pre></div>
+
+<h5 id="toc_110">Response Format</h5>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">action_token</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Verify verification code with this action token.</td>
+</tr>
+</tbody>
+</table>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;action_token&quot;: &quot;HnnTG7MQ1hUcrRtTFx9g4bHvogTCr48hMRbUqDxrjR2E&quot;
+}</code></pre></div>
+
+<p><a name="check-verification-code"></a></p>
+
+<h2 id="toc_111">Check verification code</h2>
+
+<p>Check verification code</p>
+
+<p><strong><code>GET</code></strong> /v1/api/users/info/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
+
+<ul>
+<li><a href="#curl-check-verification-code">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_112">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_113">API with query string</h6>
+
+<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3Lz&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_114">Query string</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">account</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Requester account</td>
+</tr>
+<tr>
+<td style="text-align: left">actiontoken</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">In resposne of Send Verification Email</td>
+</tr>
+<tr>
+<td style="text-align: left">token</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Verification code</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_115">Response Format</h5>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">result</td>
+<td style="text-align: left">bool</td>
+<td style="text-align: left">Pass: TRUE, Failed: FALSE</td>
+</tr>
+</tbody>
+</table>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;result&quot;: true
+}</code></pre></div>
+
 <p><a name="mock-server"></a></p>
 
-<h1 id="toc_100">Mock Server</h1>
+<h1 id="toc_116">Mock Server</h1>
 
-<h2 id="toc_101">Setup Configuration</h2>
+<h2 id="toc_117">Setup Configuration</h2>
 
 <blockquote>
 <p>Set following configuration in mockserver.app.conf</p>
@@ -1355,7 +1613,7 @@
 api_code=&quot;&quot;
 api_secret=&quot;&quot;</code></pre></div>
 
-<h2 id="toc_102">Register mock server URL</h2>
+<h2 id="toc_118">Register mock server URL</h2>
 
 <blockquote>
 <p>Operate on web admin console</p>
@@ -1365,7 +1623,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <div><pre><code class="language-none">http://localhost:8892/v1/mock/callback</code></pre></div>
 
-<h2 id="toc_103">How to compile</h2>
+<h2 id="toc_119">How to compile</h2>
 
 <ul>
 <li>Put sample code to {YOUR_GO_PATH}/github.com/cybavo/AUTH_MOCK_SERVER</li>
@@ -1380,11 +1638,11 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-testing-commands"></a></p>
 
-<h2 id="toc_104">CURL Testing Commands</h2>
+<h2 id="toc_120">CURL Testing Commands</h2>
 
 <p><a name="curl-register-new-user"></a></p>
 
-<h4 id="toc_105">Register a new user</h4>
+<h4 id="toc_121">Register a new user</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
 &quot;http://localhost:8892/v1/mock/users&quot;</code></pre></div>
@@ -1395,7 +1653,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-pair-device"></a></p>
 
-<h4 id="toc_106">Pair device</h4>
+<h4 id="toc_122">Pair device</h4>
 
 <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
 
@@ -1405,7 +1663,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-setup-pin-code"></a></p>
 
-<h4 id="toc_107">Setup PIN code</h4>
+<h4 id="toc_123">Setup PIN code</h4>
 
 <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/users/pin?account=johndoe&quot;</code></pre></div>
 
@@ -1415,7 +1673,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-get-devices"></a></p>
 
-<h4 id="toc_108">Get devices</h4>
+<h4 id="toc_124">Get devices</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
 
@@ -1425,7 +1683,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-unpair-devices"></a></p>
 
-<h4 id="toc_109">Remove devices</h4>
+<h4 id="toc_125">Remove devices</h4>
 
 <div><pre><code class="language-none">curl -X DELETE -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
 &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
@@ -1436,7 +1694,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-send-push"></a></p>
 
-<h4 id="toc_110">Send push</h4>
+<h4 id="toc_126">Send push</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
 &quot;http://localhost:8892/v1/mock/devices/2fa?account=johndoe&quot;</code></pre></div>
@@ -1447,7 +1705,7 @@ api_secret=&quot;&quot;</code></pre></div>
 
 <p><a name="curl-get-device-2fa"></a></p>
 
-<h4 id="toc_111">Get device 2FA</h4>
+<h4 id="toc_127">Get device 2FA</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;start_index=FROM&amp;request_number=COUNT&quot;
 curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;order_id=ORDER_ID&quot;</code></pre></div>
@@ -1458,7 +1716,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <p><a name="curl-cancel-device-2fa"></a></p>
 
-<h4 id="toc_112">Cancel device 2FA</h4>
+<h4 id="toc_128">Cancel device 2FA</h4>
 
 <div><pre><code class="language-none">curl -X DELETE &quot;http://localhost:8892/v1/mock/users/2fa/ORDER_ID?account=Erline&quot;</code></pre></div>
 
@@ -1468,7 +1726,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <p><a name="curl-query-user-info"></a></p>
 
-<h4 id="toc_113">Query user info</h4>
+<h4 id="toc_129">Query user info</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/me?account=johndoe&quot;</code></pre></div>
 
@@ -1478,7 +1736,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <p><a name="curl-query-callback-status"></a></p>
 
-<h4 id="toc_114">Query callback status</h4>
+<h4 id="toc_130">Query callback status</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
 &quot;http://localhost:8892/v1/mock/order/status?account=johndoe&quot;</code></pre></div>
@@ -1489,7 +1747,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <p><a name="curl-verify-user-totp"></a></p>
 
-<h4 id="toc_115">Verify user TOTP</h4>
+<h4 id="toc_131">Verify user TOTP</h4>
 
 <div><pre><code class="language-none">curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
 
@@ -1499,7 +1757,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <p><a name="curl-send-login-otp"></a></p>
 
-<h4 id="toc_116">Send Login OTP to Email</h4>
+<h4 id="toc_132">Send Login OTP to Email</h4>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10}&#39; \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
@@ -1508,13 +1766,44 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 <li><a href="#send-login-otp">API definition</a></li>
 </ul>
 
-<h5 id="toc_117"><a href="#table-of-contents">Back to top</a></h5>
+<p><a name="curl-verify-login-otp"></a></p>
 
-<h1 id="toc_118">Appendix</h1>
+<h4 id="toc_133">Send Login OTP to Email</h4>
+
+<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&quot;</code></pre></div>
+
+<ul>
+<li><a href="#verify-login-otp">API definition</a></li>
+</ul>
+
+<p><a name="curl-send-verification-email"></a></p>
+
+<h4 id="toc_134">Send verification code to user&#39;s email</h4>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;mode&quot;:1,&quot;length&quot;:32,&quot;otp_type&quot;:1,&quot;duration&quot;:10,&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;,&quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+&quot;http://localhost:8892/v1/mock/users/info/email?account=johndoe&quot;</code></pre></div>
+
+<ul>
+<li><a href="#send-verification-email">API definition</a></li>
+</ul>
+
+<p><a name="curl-check-verification-code"></a></p>
+
+<h4 id="toc_135">Check verification code</h4>
+
+<div><pre><code class="language-none">curl -X GET -d &quot;http://localhost:8892/v1/mock/users/info/verify?account=johndoe&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
+
+<ul>
+<li><a href="#check-verification-code">API definition</a></li>
+</ul>
+
+<h5 id="toc_136"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_137">Appendix</h1>
 
 <p><a name="callback-definition"></a></p>
 
-<h2 id="toc_119">Callback Definition</h2>
+<h2 id="toc_138">Callback Definition</h2>
 
 <table>
   <tr>
@@ -1555,11 +1844,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
   </tr>
 </table>
 
-<h5 id="toc_120"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_139"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="platform-definition"></a></p>
 
-<h2 id="toc_121">Platform Definition</h2>
+<h2 id="toc_140">Platform Definition</h2>
 
 <table>
 <thead>
@@ -1585,11 +1874,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_122"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_141"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="action-definition"></a></p>
 
-<h2 id="toc_123">Action Definition</h2>
+<h2 id="toc_142">Action Definition</h2>
 
 <table>
 <thead>
@@ -1619,11 +1908,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_124"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_143"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="user-action-definition"></a></p>
 
-<h2 id="toc_125">User Action Definition</h2>
+<h2 id="toc_144">User Action Definition</h2>
 
 <table>
 <thead>
@@ -1649,11 +1938,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_126"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_145"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-type-definition"></a></p>
 
-<h2 id="toc_127">2FA Type Definition</h2>
+<h2 id="toc_146">2FA Type Definition</h2>
 
 <table>
 <thead>
@@ -1679,11 +1968,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_128"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_147"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="2fa-state-definition"></a></p>
 
-<h2 id="toc_129">2FA State Definition</h2>
+<h2 id="toc_148">2FA State Definition</h2>
 
 <table>
 <thead>
@@ -1717,11 +2006,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_130"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_149"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="rule-type-definition"></a></p>
 
-<h2 id="toc_131">Rule Type Definition</h2>
+<h2 id="toc_150">Rule Type Definition</h2>
 
 <table>
 <thead>
@@ -1747,11 +2036,11 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_132"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_151"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="common-errors"></a></p>
 
-<h2 id="toc_133">Common Errors</h2>
+<h2 id="toc_152">Common Errors</h2>
 
 <table>
 <thead>
@@ -1791,4 +2080,4 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </tbody>
 </table>
 
-<h5 id="toc_134"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_153"><a href="#table-of-contents">Back to top</a></h5>
