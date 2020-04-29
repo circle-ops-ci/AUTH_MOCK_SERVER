@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The CYBAVO developers
+// Copyright (c) 2018-2020 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -13,7 +13,6 @@ package controllers
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -55,13 +54,6 @@ func calcChecksum(data []byte, secret string) string {
 
 // @router /callback [post]
 func (c *CallbackController) Callback() {
-	var request api.CallbackStruct
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		logs.Error("callback unmarshal error =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
 	//
 	// get API secret by service ID `request.ServiceID` to replace `api.APISecret` below
 	//
@@ -73,7 +65,7 @@ func (c *CallbackController) Callback() {
 		c.AbortWithError(http.StatusBadRequest, errors.New("Bad checksum"))
 	}
 
-	logs.Debug("Callback => %s\n%#v", c.Ctx.Input.RequestBody, request)
+	logs.Debug("Callback => %s", string(c.Ctx.Input.RequestBody))
 
 	c.Ctx.WriteString("OK")
 }
