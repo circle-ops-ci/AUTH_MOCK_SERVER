@@ -803,7 +803,7 @@ An example of the request:
 | :---  | :---  | :---        |
 | duration | int | Verfiication code will expire after x minute |
 | url | string | URL in email with verification code and state |
-| state | string | Defined by service provider. The server will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
+| state | string | Defined by service provider. AuthSec server will create link with a "token" and the same "state" parameter Service Provider provided. Service Provider can verify the same state to make sure that this request sent by it. |
 
 ```json
 {
@@ -812,7 +812,6 @@ An example of the request:
   "state": "7cg2v2y5j8NrFjCcvfGhrfP1k4Gsc1rd2rVs2yTYrBK3"
 }
 ```
-
 The request includes the following parameters:
 
 ###### Query string
@@ -830,6 +829,7 @@ An example of a successful response:
   "action_token": "Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2"
 }
 ```
+<span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and token by URL. Then call Verify Login Email API with account, actiontoken to verify token.</span>
 
 <a name="verify-login-otp"></a>
 ## Verify Login Email OTP
@@ -906,7 +906,7 @@ The request includes the following parameters:
 | otp_type | int | Defined by service provider. Only one verfiication code is enabled with same otp_type. |
 | duration | int | Verfiication code will expire after x minute |
 | redirect_url | string | URL in email with verification code and state |
-| state | string | Defined by service provider. The server will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
+| state | string | Defined by Service Provider. Service Provider will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
 
 ```json
 {
@@ -932,6 +932,8 @@ An example of a successful response:
   "action_token": "HnnTG7MQ1hUcrRtTFx9g4bHvogTCr48hMRbUqDxrjR2E"
 }
 ```
+
+<span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and verification code by URL. Then call Check Verfiication Code with account, actiontoken to verify verification code.</span>
 
 <a name="check-verification-code"></a>
 ## Check verification code
