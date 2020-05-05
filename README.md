@@ -199,7 +199,6 @@ The request includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | account | string | Requester account |
-| service_id | int64 | Requester service ID |
 
 ##### Response Format
 
