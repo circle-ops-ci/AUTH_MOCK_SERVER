@@ -373,8 +373,7 @@ kbd {
 <h1 id="toc_1">Get Started</h1>
 
 <ul>
-<li>Get API code and API secret on web admin console</li>
-<li>Refer to <a href="#mock-server">mock server</a> sample code </li>
+<li>Refer to <a href="#mock-server">mock server</a> to integrate CYBAVO AuthSec API.</li>
 </ul>
 
 <h1 id="toc_2">AUTH API</h1>
@@ -1974,19 +1973,23 @@ kbd {
 </blockquote>
 </blockquote>
 
-<div><pre><code class="language-none">api_server_url=&quot;&quot;
-api_code=&quot;&quot;
-api_secret=&quot;&quot;</code></pre></div>
+<div><pre><code class="language-none">api_server_url=&quot;CYBAVO_AUTHSEC_API_SERVER&quot;
+api_code=&quot;SERVICE_API_CODE&quot;
+api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
 
 <h2 id="toc_118">Register mock server URL</h2>
 
 <blockquote>
-<p>Operate on web admin console</p>
+<p>Set notification callback URL on web admin console</p>
 </blockquote>
 
-<p>Callback URL</p>
+<p>Mock server callback URL</p>
 
 <div><pre><code class="language-none">http://localhost:8892/v1/mock/callback</code></pre></div>
+
+<blockquote>
+<p>To ensure that the service provider has processed the notification callback, the CYBAVO AuthSec API server will continue to send notification callbacks to the service provider until a callback confirmation (HTTP/1.1 200 OK) is received.</p>
+</blockquote>
 
 <h2 id="toc_119">How to compile</h2>
 
