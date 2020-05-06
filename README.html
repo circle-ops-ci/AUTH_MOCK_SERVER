@@ -2012,7 +2012,7 @@ api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
 
 <h4 id="toc_121">Register a new user</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
 &quot;http://localhost:8892/v1/mock/users&quot;</code></pre></div>
 
 <ul>
@@ -2053,7 +2053,7 @@ api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
 
 <h4 id="toc_125">Remove devices</h4>
 
-<div><pre><code class="language-none">curl -X DELETE -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
+<div><pre><code class="language-none">curl -X DELETE -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
 &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
 
 <ul>
@@ -2064,7 +2064,7 @@ api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
 
 <h4 id="toc_126">Send push</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
 &quot;http://localhost:8892/v1/mock/devices/2fa?account=johndoe&quot;</code></pre></div>
 
 <ul>
@@ -2106,7 +2106,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <h4 id="toc_130">Query callback status</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
 &quot;http://localhost:8892/v1/mock/order/status?account=johndoe&quot;</code></pre></div>
 
 <ul>
@@ -2127,7 +2127,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <h4 id="toc_132">Send Login OTP to Email</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <ul>
@@ -2148,7 +2148,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <h4 id="toc_134">Send verification code to user&#39;s email</h4>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;mode&quot;:1,&quot;length&quot;:32,&quot;otp_type&quot;:1,&quot;duration&quot;:10,&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;,&quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;mode&quot;:1,&quot;length&quot;:32,&quot;otp_type&quot;:1,&quot;duration&quot;:10,&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;,&quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
 &quot;http://localhost:8892/v1/mock/users/info/email?account=johndoe&quot;</code></pre></div>
 
 <ul>

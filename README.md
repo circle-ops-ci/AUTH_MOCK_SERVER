@@ -1014,7 +1014,7 @@ http://localhost:8892/v1/mock/callback
 <a name="curl-register-new-user"></a>
 #### Register a new user
 ```
-curl -X POST -d '{"account":"johndoe","name":"JOHN DOE","email":"johndoe@example.com","locale":"en"}' \
+curl -X POST -H "Content-Type: application/json" -d '{"account":"johndoe","name":"JOHN DOE","email":"johndoe@example.com","locale":"en"}' \
 "http://localhost:8892/v1/mock/users"
 ```
 - [API definition](#register-new-user)
@@ -1043,7 +1043,7 @@ curl -X GET "http://localhost:8892/v1/mock/devices?account=johndoe"
 <a name="curl-unpair-devices"></a>
 #### Remove devices
 ```
-curl -X DELETE -d '{"devices":["DEVICE_ID"]}' \
+curl -X DELETE -H "Content-Type: application/json" -d '{"devices":["DEVICE_ID"]}' \
 "http://localhost:8892/v1/mock/devices?account=johndoe"
 ```
 - [API definition](#unpair-devices)
@@ -1051,7 +1051,7 @@ curl -X DELETE -d '{"devices":["DEVICE_ID"]}' \
 <a name="curl-send-push"></a>
 #### Send push
 ```
-curl -X POST -d '{"type":1,"title":"PUSH TITLE","body":"PUSH DESC","data":{"field_1_key":"field_1_value","field_2_key":"field_2_value"},"client_ip":"192.168.101.71","client_platform":1}' \
+curl -X POST -H "Content-Type: application/json" -d '{"type":1,"title":"PUSH TITLE","body":"PUSH DESC","data":{"field_1_key":"field_1_value","field_2_key":"field_2_value"},"client_ip":"192.168.101.71","client_platform":1}' \
 "http://localhost:8892/v1/mock/devices/2fa?account=johndoe"
 ```
 - [API definition](#send-push)
@@ -1081,7 +1081,7 @@ curl -X GET "http://localhost:8892/v1/mock/users/me?account=johndoe"
 <a name="curl-query-callback-status"></a>
 #### Query callback status
 ```
-curl -X POST -d '{"order_ids":[10000000002,10000000003]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"order_ids":[10000000002,10000000003]}' \
 "http://localhost:8892/v1/mock/order/status?account=johndoe"
 ```
 - [API definition](#query-callback-status)
@@ -1096,7 +1096,7 @@ curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&code=539826
 <a name="curl-send-login-otp"></a>
 #### Send Login OTP to Email
 ```
-curl -X POST -d '{"url":"http://localhost:8080", "duration":10, "state":"nTG7MQ1hUcrR"}' \
+curl -X POST -H "Content-Type: application/json" -d '{"url":"http://localhost:8080", "duration":10, "state":"nTG7MQ1hUcrR"}' \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 ```
 - [API definition](#send-login-otp)
@@ -1112,7 +1112,7 @@ curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe
 <a name="curl-send-verification-email"></a>
 #### Send verification code to user's email
 ```
-curl -X POST -d '{"mode":1,"length":32,"otp_type":1,"duration":10,"redirect_url":"http://localhost:8080","state":"nTG7MQ1hUcrR"}' \
+curl -X POST -H "Content-Type: application/json" -d '{"mode":1,"length":32,"otp_type":1,"duration":10,"redirect_url":"http://localhost:8080","state":"nTG7MQ1hUcrR"}' \
 "http://localhost:8892/v1/mock/users/info/email?account=johndoe"
 ```
 - [API definition](#send-verification-email)
