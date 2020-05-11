@@ -1001,7 +1001,7 @@ http://localhost:8892/v1/mock/callback
 > To ensure that the service provider has processed the notification callback, the CYBAVO AuthSec API server will continue to send notification callbacks to the service provider until a callback confirmation (HTTP/1.1 200 OK) is received.
 
 ## How to compile
-- Put sample code to {YOUR\_GO\_PATH}/github.com/cybavo/AUTH\_MOCK\_SERVER
+- Put sample code to {YOUR\_GO\_PATH}/src/github.com/cybavo/AUTH\_MOCK\_SERVER
 - Execute
 	- glide install
 	- go build ./mockserver.go
