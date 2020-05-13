@@ -32,4 +32,5 @@ func init() {
 	beego.Router("/v1/mock/users/info/email", &controllers.OuterController{}, "POST:CheckUserInfoEmail")
 	beego.Router("/v1/mock/users/info/verify", &controllers.OuterController{}, "GET:VerifyUserOTP")
 	beego.Router("/v1/mock/callback", &controllers.CallbackController{}, "POST:Callback")
+	beego.Router("/v1/mock/users/edit", &controllers.OuterController{}, "POST:UpdateUser")
 }

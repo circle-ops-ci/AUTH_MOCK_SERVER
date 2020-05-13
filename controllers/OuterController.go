@@ -285,3 +285,19 @@ func (c *OuterController) VerifyUserOTP() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @router /users/edit[post]
+func (c *OuterController) UpdateUser() {
+
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest("POST", "/v1/api/users/edit", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("RegisterUser failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
