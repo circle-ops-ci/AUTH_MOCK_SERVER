@@ -349,7 +349,7 @@ kbd {
 <li><a href="#query-callback-status">Query Callback Status</a></li>
 <li><a href="#verify-user-totp">Verify User TOTP</a></li>
 <li><a href="#send-login-otp">Send Login OTP Email</a></li>
-<li><a href="#verify-login-otp">Verify Email Login OTP</a></li>
+<li><a href="#verify-login-otp">Verify Login OTP</a></li>
 <li><a href="#send-verification-email">Send User Verification Email</a></li>
 <li><a href="#check-verification-code">Check Verification Code</a></li>
 </ul></li>
@@ -1642,27 +1642,39 @@ kbd {
 
 <tbody>
 <tr>
-<td style="text-align: left">duration</td>
+<td style="text-align: left">mode</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Verfiication code will expire after x minute</td>
+<td style="text-align: left">verification type. 0: String, 1: Number</td>
 </tr>
 <tr>
-<td style="text-align: left">url</td>
+<td style="text-align: left">length</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
+</tr>
+<tr>
+<td style="text-align: left">duration</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
+</tr>
+<tr>
+<td style="text-align: left">redirect_url</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">URL in email with verification code and state</td>
 </tr>
 <tr>
 <td style="text-align: left">state</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Defined by service provider. AuthSec server will create link with a &quot;token&quot; and the same &quot;state&quot; parameter Service Provider provided. Service Provider can verify the same state to make sure that this request sent by it.</td>
+<td style="text-align: left">Defined by Service Provider. Service Provider will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
 </tr>
 </tbody>
 </table>
 
 <div><pre><code class="language-javascript">{
-  &quot;url&quot;: &quot;https://serviceprovider.com.tw/redirect&quot;,
-  &quot;duration&quot;: 30,
-  &quot;state&quot;: &quot;7cg2v2y5j8NrFjCcvfGhrfP1k4Gsc1rd2rVs2yTYrBK3&quot;
+    &quot;mode&quot;:1,
+    &quot;length&quot;:32,
+    &quot;duration&quot;:10,
+    &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
+    &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
 }</code></pre></div>
 
 <p>The request includes the following parameters:</p>
@@ -1814,22 +1826,17 @@ kbd {
 <tr>
 <td style="text-align: left">mode</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">verification type. 0: Number, 1: String</td>
+<td style="text-align: left">verification type. 0: String, 1: Number</td>
 </tr>
 <tr>
 <td style="text-align: left">length</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">The length of verification code</td>
-</tr>
-<tr>
-<td style="text-align: left">otp_type</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Defined by service provider. Only one verfiication code is enabled with same otp_type.</td>
+<td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
 </tr>
 <tr>
 <td style="text-align: left">duration</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Verfiication code will expire after x minute</td>
+<td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
 </tr>
 <tr>
 <td style="text-align: left">redirect_url</td>
@@ -1847,7 +1854,6 @@ kbd {
 <div><pre><code class="language-javascript">{
     &quot;mode&quot;:1,
     &quot;length&quot;:32,
-    &quot;otp_type&quot;:1,
     &quot;duration&quot;:10,
     &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
     &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
@@ -2127,7 +2133,7 @@ curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;or
 
 <h4 id="toc_132">Send Login OTP to Email</h4>
 
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <ul>
@@ -2136,7 +2142,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <p><a name="curl-verify-login-otp"></a></p>
 
-<h4 id="toc_133">Send Login OTP to Email</h4>
+<h4 id="toc_133">Verify Login OTP</h4>
 
 <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
 

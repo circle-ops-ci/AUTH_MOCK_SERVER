@@ -15,7 +15,7 @@
 	- [Query Callback Status](#query-callback-status)
 	- [Verify User TOTP](#verify-user-totp)
   - [Send Login OTP Email](#send-login-otp)
-  - [Verify Email Login OTP](#verify-login-otp)
+  - [Verify Login OTP](#verify-login-otp)
   - [Send User Verification Email](#send-verification-email)
   - [Check Verification Code](#check-verification-code)
 - Testing
@@ -799,15 +799,19 @@ An example of the request:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| duration | int | Verfiication code will expire after x minute |
-| url | string | URL in email with verification code and state |
-| state | string | Defined by service provider. AuthSec server will create link with a "token" and the same "state" parameter Service Provider provided. Service Provider can verify the same state to make sure that this request sent by it. |
+| mode | int | verification type. 0: String, 1: Number |
+| length | int | The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)|
+| duration | int | Verfiication code will expire after x minute (Option: default vaule is 10 min)|
+| redirect_url | string | URL in email with verification code and state |
+| state | string | Defined by Service Provider. Service Provider will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
 
 ```json
 {
-  "url": "https://serviceprovider.com.tw/redirect",
-  "duration": 30,
-  "state": "7cg2v2y5j8NrFjCcvfGhrfP1k4Gsc1rd2rVs2yTYrBK3"
+	"mode":1,
+	"length":32,
+	"duration":10,
+	"redirect_url":"https://serviceprovider.com/user/active",
+	"state":"CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN"
 }
 ```
 The request includes the following parameters:
@@ -899,10 +903,9 @@ The request includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| mode | int | verification type. 0: Number, 1: String |
-| length | int | The length of verification code |
-| otp_type | int | Defined by service provider. Only one verfiication code is enabled with same otp_type. |
-| duration | int | Verfiication code will expire after x minute |
+| mode | int | verification type. 0: String, 1: Number |
+| length | int | The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)|
+| duration | int | Verfiication code will expire after x minute (Option: default vaule is 10 min)|
 | redirect_url | string | URL in email with verification code and state |
 | state | string | Defined by Service Provider. Service Provider will create link with a "verification code" and the same "state" parameter you provided. Service provider can verify the same state to make sure that this request sent by it. |
 
@@ -910,7 +913,6 @@ The request includes the following parameters:
 {
 	"mode":1,
 	"length":32,
-	"otp_type":1,
 	"duration":10,
 	"redirect_url":"https://serviceprovider.com/user/active",
 	"state":"CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN"
@@ -1096,13 +1098,13 @@ curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&code=539826
 <a name="curl-send-login-otp"></a>
 #### Send Login OTP to Email
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"url":"http://localhost:8080", "duration":10, "state":"nTG7MQ1hUcrR"}' \
+curl -X POST -H "Content-Type: application/json" -d '{"redirect_url":"http://localhost:8080", "duration":10, "state":"nTG7MQ1hUcrR"}' \
 http://localhost:8892/v1/mock/users/emailotp?account=johndoe
 ```
 - [API definition](#send-login-otp)
 
 <a name="curl-verify-login-otp"></a>
-#### Send Login OTP to Email
+#### Verify Login OTP
 ```
 curl -X GET "http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj"
 ```
