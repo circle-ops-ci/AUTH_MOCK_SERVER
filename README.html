@@ -328,2148 +328,2349 @@ kbd {
 
 <body>
 
-<p><a name="table-of-contents"></a></p>
-
-<h2 id="toc_0">Table of contents</h2>
-
-<ul>
-<li><a href="#get-started">Get Started</a></li>
-<li>AUTH API
-
-<ul>
-<li><a href="#register-new-user">Register New User</a></li>
-<li><a href="#pair-device">Pair Device</a></li>
-<li><a href="#setup-pin-code">Setup PIN Code</a></li>
-<li><a href="#get-devices">Get Devices</a></li>
-<li><a href="#unpair-devices">Unpair Devices</a></li>
-<li><a href="#send-push">Send Push</a></li>
-<li><a href="#get-device-2fa">Get Device 2FA</a></li>
-<li><a href="#cancel-device-2fa">Cancel Device 2FA</a></li>
-<li><a href="#get-user-info">Get User Info</a></li>
-<li><a href="#query-callback-status">Query Callback Status</a></li>
-<li><a href="#verify-user-totp">Verify User TOTP</a></li>
-<li><a href="#send-login-otp">Send Login OTP Email</a></li>
-<li><a href="#verify-login-otp">Verify Login OTP</a></li>
-<li><a href="#send-verification-email">Send User Verification Email</a></li>
-<li><a href="#check-verification-code">Check Verification Code</a></li>
-</ul></li>
-<li>Testing
-
-<ul>
-<li><a href="#mock-server">Mock Server</a></li>
-<li><a href="#curl-testing-commands">CURL Testing Commands</a></li>
-<li><a href="#other-language-versions">Other Language Versions</a></li>
-</ul></li>
-<li>Appendix
-
-<ul>
-<li><a href="#callback-definition">Callback Definition</a></li>
-<li><a href="#api-callback-list">API Callback List</a></li>
-</ul></li>
-</ul>
-
-<p><a name="get-started"></a></p>
-
-<h1 id="toc_1">Get Started</h1>
-
-<ul>
-<li>Refer to <a href="#mock-server">mock server</a> to integrate CYBAVO AuthSec API.</li>
-</ul>
-
-<h1 id="toc_2">AUTH API</h1>
-
-<p><a name="register-new-user"></a></p>
-
-<h2 id="toc_3">Register New User</h2>
-
-<p>Register a new user.</p>
-
-<p><strong><code>POST</code></strong> /v1/api/users </p>
-
-<ul>
-<li><a href="#curl-register-new-user">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_4">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_5">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;name&quot;: &quot;JOHN DOE&quot;,
-  &quot;account&quot;: &quot;johndoe&quot;,
-  &quot;email&quot;: &quot;johndoe@example.com&quot;,
-  &quot;locale&quot;: &quot;en&quot;,
-  &quot;bound_limit&quot;: 1
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_6">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">name</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User name</td>
-</tr>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User account (SYSTEM UNIQUE ID)</td>
-</tr>
-<tr>
-<td style="text-align: left">email</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User email (OPTIONAL)</td>
-</tr>
-<tr>
-<td style="text-align: left">locale</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User preference locale (en, zh-TW, zh-CN, ja, ko)</td>
-</tr>
-<tr>
-<td style="text-align: left">bound_limit</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">The upper bound of binding deivce. &lt;=0: unlimited</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>The <code>account</code> field is a system-wise unique ID</p>
-</blockquote>
-
-<h5 id="toc_7">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;account&quot;: &quot;johndoe&quot;,
-  &quot;email&quot;: &quot;johndoe@example.com&quot;
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Registered user&#39;s account</td>
-</tr>
-<tr>
-<td style="text-align: left">email</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Registered user&#39;s email</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_8">Possible Errors</h4>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">HTTP Status Code</th>
-<th style="text-align: left">Error Code</th>
-<th style="text-align: left">Error Message</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">400</td>
-<td style="text-align: left">103</td>
-<td style="text-align: left">Account already exists</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_9">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_10"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="pair-device"></a></p>
-
-<h2 id="toc_11">Pair Device</h2>
-
-<p>Pair device with user. </p>
-
-<blockquote>
-<p>This API has a callback.</p>
-</blockquote>
-
-<p><strong><code>POST</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-pair-device">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_12">Request Format</h5>
-
-<p>An example of the reques:</p>
-
-<h6 id="toc_13">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_14">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_15">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;order_id&quot;: 10000000001,
-  &quot;url&quot;: &quot;http://192.168.101.71:8080/v1/auth/devices?token=Fekj7FFHaKZ1M2M7NT2tK9ziT3UT7q3pHzY7i27oUDVb&quot;
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">order_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Callback ID. Use this ID to identify specific callback.</td>
-</tr>
-<tr>
-<td style="text-align: left">url</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">URL to bind device with user. Convert to QR code then scan with CYBAVO Auth APP.</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>Only retrieve token value from url then covert to QR code to pair.</p>
-</blockquote>
-
-<h4 id="toc_16">Callback</h4>
-
-<p>An example of a callback:</p>
-
-<div><pre><code class="language-none">{
-  &quot;behavior_result&quot;: 2,
-  &quot;behavior_type&quot;: 1,
-  &quot;order_id&quot;: 10000000001,
-  &quot;service_id&quot;: 5
-}</code></pre></div>
-
-<ul>
-<li><a href="#callback-definition">View callback definition</a></li>
-</ul>
-
-<h4 id="toc_17">Possible Errors</h4>
-
-<h5 id="toc_18">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_19"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="setup-pin-code"></a></p>
-
-<h2 id="toc_20">Setup PIN Code</h2>
-
-<p>Setup user PIN code.</p>
-
-<p><strong><code>POST</code></strong> /v1/api/user/pin?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-setup-pin-code">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_21">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_22">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/pin?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_23">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_24">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;order_id&quot;: 20000000008
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">order_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Callback ID. Use this ID to identify specific callback.</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_25">Callback</h4>
-
-<p>An example of a callback:</p>
-
-<div><pre><code class="language-none">{
-  &quot;behavior_result&quot;: 2,
-  &quot;behavior_type&quot;: 2,
-  &quot;order_id&quot;: 20000000008,
-  &quot;service_id&quot;: 2
-}</code></pre></div>
-
-<ul>
-<li><a href="#callback-definition">View callback definition</a></li>
-</ul>
-
-<h4 id="toc_26">Possible Errors</h4>
-
-<h5 id="toc_27">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_28"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="get-devices"></a></p>
-
-<h2 id="toc_29">Get Devices</h2>
-
-<p>Get user paired devices.</p>
-
-<p><strong><code>GET</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-get-devices">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_30">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_31">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_32">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_33">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;devices&quot;: [
-    {
-      &quot;name&quot;: &quot;OnePlus A0001&quot;,
-      &quot;platform&quot;: &quot;Android 7.1.2&quot;,
-      &quot;device_id&quot;: &quot;83u7FaTEFxDXadF73vMoGfftqpb2VUkqPEcL9wEoUQYC&quot;,
-      &quot;service_id&quot;: 2,
-      &quot;last_active_time&quot;: 1574305381,
-      &quot;create_time&quot;: 1574304819
-    }
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">name</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Device name</td>
-</tr>
-<tr>
-<td style="text-align: left">platform</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Device platform</td>
-</tr>
-<tr>
-<td style="text-align: left">device_id</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Device UID</td>
-</tr>
-<tr>
-<td style="text-align: left">service_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">ID of linked service</td>
-</tr>
-<tr>
-<td style="text-align: left">last_active_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Last device active unix time in UTC</td>
-</tr>
-<tr>
-<td style="text-align: left">create_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Device creation unix time in UTC</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_34">Possible Errors</h4>
-
-<h5 id="toc_35">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_36"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="unpair-devices"></a></p>
-
-<h2 id="toc_37">Unpair Devices</h2>
-
-<p>Unpair user&#39;s devices.</p>
-
-<p><strong><code>DELETE</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-unpair-devices">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_38">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_39">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
-
-<h6 id="toc_40">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;devices&quot;: [&quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;]
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_41">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h6 id="toc_42">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">devices</td>
-<td style="text-align: left">array of string</td>
-<td style="text-align: left">ID of devices about to unpairing</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_43">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;removed_devices&quot;: [
-    &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">removed_devices</td>
-<td style="text-align: left">array of string</td>
-<td style="text-align: left">ID of unpaired devices</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_44">Possible Errors</h4>
-
-<h5 id="toc_45">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_46"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="send-push"></a></p>
-
-<h2 id="toc_47">Send Push</h2>
-
-<p>Send push notification to devices.</p>
-
-<p><strong><code>POST</code></strong> /v1/api/devices/2fa?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-send-push">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_48">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_49">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/devices/2fa?account=johndoe</code></pre></div>
-
-<h6 id="toc_50">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;type&quot;: 1,
-  &quot;title&quot;: &quot;TITLE OF PUSH&quot;,
-  &quot;body&quot;: &quot;BODY OF PUSH&quot;,
-  &quot;data&quot;: {
-    &quot;custom_field01&quot;: &quot;CUSTOM MSG&quot;,
-    &quot;custom_field02&quot;: &quot;CUSTOM MSG 02&quot;
-  },
-  &quot;client_ip&quot;: &quot;192.168.0.111&quot;,
-  &quot;client_platform&quot;: 1
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_51">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h6 id="toc_52">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">type</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Service event type</td>
-</tr>
-<tr>
-<td style="text-align: left">title</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Title of push notification</td>
-</tr>
-<tr>
-<td style="text-align: left">body</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Body of push notification</td>
-</tr>
-<tr>
-<td style="text-align: left">data</td>
-<td style="text-align: left">object</td>
-<td style="text-align: left">User defined custom data</td>
-</tr>
-<tr>
-<td style="text-align: left">client_ip</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester IP address</td>
-</tr>
-<tr>
-<td style="text-align: left">client_platform</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#platform-definition">Platform</a></td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_53">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;success_devices&quot;: [
-    &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
-  ],
-  &quot;action&quot;: 2,
-  &quot;order_id&quot;: 10000000027,
-  &quot;matched_policy&quot;: {
-    &quot;policy_id&quot;: 0,
-    &quot;rule_type&quot;: 0
-  }
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">success_devices</td>
-<td style="text-align: left">array of string</td>
-<td style="text-align: left">ID of devices will get push</td>
-</tr>
-<tr>
-<td style="text-align: left">action</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#action-definition">Action</a></td>
-</tr>
-<tr>
-<td style="text-align: left">order_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">ID of callback</td>
-</tr>
-<tr>
-<td style="text-align: left">matched_policy</td>
-<td style="text-align: left">object</td>
-<td style="text-align: left">Matched policy info, refet to <a href="#rule-type-definition">Rule Type</a></td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_54">Callback</h4>
-
-<p>An example of a callback:</p>
-
-<div><pre><code class="language-none">{
-  &quot;behavior_result&quot;: 2,
-  &quot;behavior_type&quot;: 1,
-  &quot;order_id&quot;: 10000000027,
-  &quot;service_id&quot;: 2
-}</code></pre></div>
-
-<ul>
-<li><a href="#callback-definition">View callback definition</a></li>
-</ul>
-
-<h4 id="toc_55">Possible Errors</h4>
-
-<h5 id="toc_56">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_57"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="get-device-2fa"></a></p>
-
-<h2 id="toc_58">Get Device 2FA</h2>
-
-<p>Get user&#39;s devices 2FA status.</p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/2fa?account=<code>USER_ACCOUNT</code>&amp;start_index=<code>FROM</code>&amp;request_number=<code>COUNT</code></p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/2fa?account=<code>USER_ACCOUNT</code>&amp;order_id=<code>CALLBACK_ID</code></p>
-
-<ul>
-<li><a href="#curl-get-device-2fa">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_59">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_60">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/2fa?account=johndoe&amp;start_index=0&amp;request_number=10
-/v1/api/users/2fa?account=johndoe&amp;order_id=10000000012</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_61">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_62">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;items&quot;: [
-    {
-      &quot;order_id&quot;: 10000000031,
-      &quot;type&quot;: 272,
-      &quot;user_action&quot;: 2,
-      &quot;state&quot;: 1,
-      &quot;updated_time&quot;: 1574405409,
-      &quot;message_type&quot;: 1,
-      &quot;message_title&quot;: &quot;TITLE OF PUSH&quot;,
-      &quot;message_body&quot;: &quot;BODY OF PUSH&quot;,
-      &quot;device_sent&quot;: 1
-    }
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">order_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Callback ID</td>
-</tr>
-<tr>
-<td style="text-align: left">type</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#2fa-type-definition">2FA Type</a></td>
-</tr>
-<tr>
-<td style="text-align: left">user_action</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#user-action-definition">User Action</a></td>
-</tr>
-<tr>
-<td style="text-align: left">state</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#2fa-state-definition">2FA State</a></td>
-</tr>
-<tr>
-<td style="text-align: left">updated_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">2FA update unix time in UTC</td>
-</tr>
-<tr>
-<td style="text-align: left">message_title</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Title of push notification</td>
-</tr>
-<tr>
-<td style="text-align: left">message_body</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Body of push notification</td>
-</tr>
-<tr>
-<td style="text-align: left">message_type</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Service event type</td>
-</tr>
-<tr>
-<td style="text-align: left">device_sent</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Device count that received this push notification</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_63">Possible Errors</h4>
-
-<h5 id="toc_64">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_65"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="cancel-device-2fa"></a></p>
-
-<h2 id="toc_66">Cancel Device 2FA</h2>
-
-<p>Cancel the 2FA sent via <code>/v1/api/devices/2fa</code> API.</p>
-
-<p><strong><code>DELETE</code></strong> /v1/api/users/2fa/<code>ORDER_ID</code>?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-cancel-device-2fa">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_67">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_68">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/2fa/10000000012?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_69">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_70">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;canceled_devices&quot;: [
-    &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">canceled_devices</td>
-<td style="text-align: left">array of string</td>
-<td style="text-align: left">Devices&#39; 2FA has been canceled</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_71">Possible Errors</h4>
-
-<h5 id="toc_72">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_73"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="get-user-info"></a></p>
-
-<h2 id="toc_74">Get User Info</h2>
-
-<p>Get user info.</p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/me?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-get-user-info">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_75">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_76">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/me?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_77">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_78">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;account&quot;: &quot;johndoe&quot;,
-  &quot;user_email&quot;: &quot;johndoe@example.com&quot;,
-  &quot;service_id&quot;: 2,
-  &quot;device_count&quot;: 1,
-  &quot;is_setup_pin&quot;: true
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User account</td>
-</tr>
-<tr>
-<td style="text-align: left">user_email</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">User email</td>
-</tr>
-<tr>
-<td style="text-align: left">service_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Service ID</td>
-</tr>
-<tr>
-<td style="text-align: left">device_count</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Count of paired devices</td>
-</tr>
-<tr>
-<td style="text-align: left">is_setup_pin</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">PIN is set or not</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_79">Possible Errors</h4>
-
-<h5 id="toc_80">Refer to <a href="#common-errors">Common Errors</a></h5>
-
-<h5 id="toc_81"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="query-callback-status"></a></p>
-
-<h2 id="toc_82">Query Callback Status</h2>
-
-<p>Query callbacks&#39; status belong to requester&#39;s company.</p>
-
-<p><strong><code>POST</code></strong> /v1/api/order/status</p>
-
-<ul>
-<li><a href="#curl-query-callback-status">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_83">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_84">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/order/status?account=johndoe</code></pre></div>
-
-<h6 id="toc_85">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;order_ids&quot;: [
-    10000000006,
-    20000000010
-  ]
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_86">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h6 id="toc_87">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">order_ids</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">ID of callbacks</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_88">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;order_status&quot;: [
-    {
-      &quot;is_exist&quot;: true,
-      &quot;order_id&quot;: 10000000006,
-      &quot;behavior_type&quot;: 1,
-      &quot;behavior_result&quot;: 0,
-      &quot;addon&quot;: {}
+  <p><a name="table-of-contents"></a></p>
+
+  <h2 id="toc_0">Table of contents</h2>
+  
+  <ul>
+  <li><a href="#get-started">Get Started</a></li>
+  <li>AUTH API
+  
+  <ul>
+  <li><a href="#register-new-user">Register New User</a></li>
+  <li><a href="#pair-device">Pair Device</a></li>
+  <li><a href="#setup-pin-code">Setup PIN Code</a></li>
+  <li><a href="#get-devices">Get Devices</a></li>
+  <li><a href="#unpair-devices">Unpair Devices</a></li>
+  <li><a href="#send-push">Send Push</a></li>
+  <li><a href="#get-device-2fa">Get Device 2FA</a></li>
+  <li><a href="#cancel-device-2fa">Cancel Device 2FA</a></li>
+  <li><a href="#get-user-info">Get User Info</a></li>
+  <li><a href="#query-callback-status">Query Callback Status</a></li>
+  <li><a href="#verify-user-totp">Verify User TOTP</a></li>
+  <li><a href="#send-login-otp">Send Login OTP Email</a></li>
+  <li><a href="#verify-login-otp">Verify Login OTP</a></li>
+  <li><a href="#send-verification-email">Send User Verification Email</a></li>
+  <li><a href="#check-verification-code">Check Verification Code</a></li>
+  <li><a href="#update-user-info">Update User Info</a></li>
+  <li><a href="#delete-user">Delete User</a></li>
+  </ul></li>
+  <li>Testing
+  
+  <ul>
+  <li><a href="#mock-server">Mock Server</a></li>
+  <li><a href="#curl-testing-commands">CURL Testing Commands</a></li>
+  <li><a href="#other-language-versions">Other Language Versions</a></li>
+  </ul></li>
+  <li>Appendix
+  
+  <ul>
+  <li><a href="#callback-definition">Callback Definition</a></li>
+  <li><a href="#api-callback-list">API Callback List</a></li>
+  </ul></li>
+  </ul>
+  
+  <p><a name="get-started"></a></p>
+  
+  <h1 id="toc_1">Get Started</h1>
+  
+  <ul>
+  <li>Refer to <a href="#mock-server">mock server</a> to integrate CYBAVO AuthSec API.</li>
+  </ul>
+  
+  <h1 id="toc_2">AUTH API</h1>
+  
+  <p><a name="register-new-user"></a></p>
+  
+  <h2 id="toc_3">Register New User</h2>
+  
+  <p>Register a new user.</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/users </p>
+  
+  <ul>
+  <li><a href="#curl-register-new-user">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_4">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_5">Post body</h6>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;name&quot;: &quot;JOHN DOE&quot;,
+    &quot;account&quot;: &quot;johndoe&quot;,
+    &quot;email&quot;: &quot;johndoe@example.com&quot;,
+    &quot;locale&quot;: &quot;en&quot;,
+    &quot;bound_limit&quot;: 1
+  }</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_6">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">name</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User name</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User account (SYSTEM UNIQUE ID)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">email</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User email (OPTIONAL)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">locale</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User preference locale (en, zh-TW, zh-CN, ja, ko)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">bound_limit</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">The upper bound of binding deivce. &lt;=0: unlimited</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <blockquote>
+  <p>The <code>account</code> field is a system-wise unique ID</p>
+  </blockquote>
+  
+  <h5 id="toc_7">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;account&quot;: &quot;johndoe&quot;,
+    &quot;email&quot;: &quot;johndoe@example.com&quot;
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Registered user&#39;s account</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">email</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Registered user&#39;s email</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_8">Possible Errors</h4>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">HTTP Status Code</th>
+  <th style="text-align: left">Error Code</th>
+  <th style="text-align: left">Error Message</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">400</td>
+  <td style="text-align: left">103</td>
+  <td style="text-align: left">Account already exists</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_9">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_10"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="pair-device"></a></p>
+  
+  <h2 id="toc_11">Pair Device</h2>
+  
+  <p>Pair device with user. </p>
+  
+  <blockquote>
+  <p>This API has a callback.</p>
+  </blockquote>
+  
+  <p><strong><code>POST</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-pair-device">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_12">Request Format</h5>
+  
+  <p>An example of the reques:</p>
+  
+  <h6 id="toc_13">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_14">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_15">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;order_id&quot;: 10000000001,
+    &quot;url&quot;: &quot;http://192.168.101.71:8080/v1/auth/devices?token=Fekj7FFHaKZ1M2M7NT2tK9ziT3UT7q3pHzY7i27oUDVb&quot;
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">order_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Callback ID. Use this ID to identify specific callback.</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">url</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">URL to bind device with user. Convert to QR code then scan with CYBAVO Auth APP.</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <blockquote>
+  <p>Only retrieve token value from url then covert to QR code to pair.</p>
+  </blockquote>
+  
+  <h4 id="toc_16">Callback</h4>
+  
+  <p>An example of a callback:</p>
+  
+  <div><pre><code class="language-none">{
+    &quot;behavior_result&quot;: 2,
+    &quot;behavior_type&quot;: 1,
+    &quot;order_id&quot;: 10000000001,
+    &quot;service_id&quot;: 5
+  }</code></pre></div>
+  
+  <ul>
+  <li><a href="#callback-definition">View callback definition</a></li>
+  </ul>
+  
+  <h4 id="toc_17">Possible Errors</h4>
+  
+  <h5 id="toc_18">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_19"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="setup-pin-code"></a></p>
+  
+  <h2 id="toc_20">Setup PIN Code</h2>
+  
+  <p>Setup user PIN code.</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/user/pin?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-setup-pin-code">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_21">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_22">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/pin?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_23">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_24">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;order_id&quot;: 20000000008
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">order_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Callback ID. Use this ID to identify specific callback.</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_25">Callback</h4>
+  
+  <p>An example of a callback:</p>
+  
+  <div><pre><code class="language-none">{
+    &quot;behavior_result&quot;: 2,
+    &quot;behavior_type&quot;: 2,
+    &quot;order_id&quot;: 20000000008,
+    &quot;service_id&quot;: 2
+  }</code></pre></div>
+  
+  <ul>
+  <li><a href="#callback-definition">View callback definition</a></li>
+  </ul>
+  
+  <h4 id="toc_26">Possible Errors</h4>
+  
+  <h5 id="toc_27">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_28"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="get-devices"></a></p>
+  
+  <h2 id="toc_29">Get Devices</h2>
+  
+  <p>Get user paired devices.</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-get-devices">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_30">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_31">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_32">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_33">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;devices&quot;: [
+      {
+        &quot;name&quot;: &quot;OnePlus A0001&quot;,
+        &quot;platform&quot;: &quot;Android 7.1.2&quot;,
+        &quot;device_id&quot;: &quot;83u7FaTEFxDXadF73vMoGfftqpb2VUkqPEcL9wEoUQYC&quot;,
+        &quot;service_id&quot;: 2,
+        &quot;last_active_time&quot;: 1574305381,
+        &quot;create_time&quot;: 1574304819
+      }
+    ]
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">name</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Device name</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">platform</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Device platform</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">device_id</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Device UID</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">service_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">ID of linked service</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">last_active_time</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Last device active unix time in UTC</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">create_time</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Device creation unix time in UTC</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_34">Possible Errors</h4>
+  
+  <h5 id="toc_35">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_36"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="unpair-devices"></a></p>
+  
+  <h2 id="toc_37">Unpair Devices</h2>
+  
+  <p>Unpair user&#39;s devices.</p>
+  
+  <p><strong><code>DELETE</code></strong> /v1/api/devices?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-unpair-devices">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_38">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_39">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/devices?account=johndoe</code></pre></div>
+  
+  <h6 id="toc_40">Post body</h6>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;devices&quot;: [&quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;]
+  }</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_41">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h6 id="toc_42">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">devices</td>
+  <td style="text-align: left">array of string</td>
+  <td style="text-align: left">ID of devices about to unpairing</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_43">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;removed_devices&quot;: [
+      &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
+    ]
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">removed_devices</td>
+  <td style="text-align: left">array of string</td>
+  <td style="text-align: left">ID of unpaired devices</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_44">Possible Errors</h4>
+  
+  <h5 id="toc_45">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_46"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="send-push"></a></p>
+  
+  <h2 id="toc_47">Send Push</h2>
+  
+  <p>Send push notification to devices.</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/devices/2fa?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-send-push">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_48">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_49">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/devices/2fa?account=johndoe</code></pre></div>
+  
+  <h6 id="toc_50">Post body</h6>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;type&quot;: 1,
+    &quot;title&quot;: &quot;TITLE OF PUSH&quot;,
+    &quot;body&quot;: &quot;BODY OF PUSH&quot;,
+    &quot;data&quot;: {
+      &quot;custom_field01&quot;: &quot;CUSTOM MSG&quot;,
+      &quot;custom_field02&quot;: &quot;CUSTOM MSG 02&quot;
     },
-    {
-      &quot;is_exist&quot;: true,
-      &quot;order_id&quot;: 20000000010,
-      &quot;behavior_type&quot;: 2,
-      &quot;behavior_result&quot;: 2,
-      &quot;addon&quot;: {}
+    &quot;client_ip&quot;: &quot;192.168.0.111&quot;,
+    &quot;client_platform&quot;: 1
+  }</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_51">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h6 id="toc_52">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">type</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Service event type</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">title</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Title of push notification</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">body</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Body of push notification</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">data</td>
+  <td style="text-align: left">object</td>
+  <td style="text-align: left">User defined custom data</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">client_ip</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester IP address</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">client_platform</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Refer to <a href="#platform-definition">Platform</a></td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_53">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;success_devices&quot;: [
+      &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
+    ],
+    &quot;action&quot;: 2,
+    &quot;order_id&quot;: 10000000027,
+    &quot;matched_policy&quot;: {
+      &quot;policy_id&quot;: 0,
+      &quot;rule_type&quot;: 0
     }
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">is_exist</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">This order_id exists or not</td>
-</tr>
-<tr>
-<td style="text-align: left">order_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">ID of callback</td>
-</tr>
-<tr>
-<td style="text-align: left">behavior_type</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left"><a href="#callback-definition">View callback definition</a></td>
-</tr>
-<tr>
-<td style="text-align: left">behavior_result</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left"><a href="#callback-definition">View callback definition</a></td>
-</tr>
-<tr>
-<td style="text-align: left">addon</td>
-<td style="text-align: left">object</td>
-<td style="text-align: left">The custom fields of request</td>
-</tr>
-</tbody>
-</table>
-
-<p><a name="verify-user-totp"></a></p>
-
-<h2 id="toc_89">Verify User TOTP</h2>
-
-<p>Verify user&#39;s totp.</p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/totpverify?account=<code>USER_ACCOUNT</code>&amp;code=<code>TOTP</code></p>
-
-<ul>
-<li><a href="#curl-verify-user-totp">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_90">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_91">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_92">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-<tr>
-<td style="text-align: left">code</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">totp</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_93">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;result&quot;: true
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">result</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">The result of totp verification</td>
-</tr>
-</tbody>
-</table>
-
-<p><a name="send-login-otp"></a></p>
-
-<h2 id="toc_94">Send Login OTP to Email</h2>
-
-<p>Users click the link in email to login</p>
-
-<p><strong><code>POST</code></strong> /v1/api/users/emailotp?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-send-login-otp">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_95">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_96">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/emailotp?account=johndoe</code></pre></div>
-
-<h6 id="toc_97">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">mode</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">verification type. 0: String, 1: Number</td>
-</tr>
-<tr>
-<td style="text-align: left">length</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
-</tr>
-<tr>
-<td style="text-align: left">duration</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
-</tr>
-<tr>
-<td style="text-align: left">redirect_url</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">URL in email with verification code and state</td>
-</tr>
-<tr>
-<td style="text-align: left">state</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Defined by Service Provider. Service Provider will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
-</tr>
-</tbody>
-</table>
-
-<div><pre><code class="language-javascript">{
-    &quot;mode&quot;:1,
-    &quot;length&quot;:32,
-    &quot;duration&quot;:10,
-    &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
-    &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_98">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_99">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;action_token&quot;: &quot;Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&quot;
-}</code></pre></div>
-
-<p><span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and token by URL. Then call Verify Login Email API with account, actiontoken to verify token.</span></p>
-
-<p><a name="verify-login-otp"></a></p>
-
-<h2 id="toc_100">Verify Login Email OTP</h2>
-
-<p>Users click the link in email to login, and service provider retrive login token to verify</p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/emailotp/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
-
-<ul>
-<li><a href="#curl-verify-login-otp">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_101">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_102">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_103">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-<tr>
-<td style="text-align: left">actiontoken</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">In resposne of Send Login OTP to Email</td>
-</tr>
-<tr>
-<td style="text-align: left">token</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Token in email</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_104">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">success_devices</td>
+  <td style="text-align: left">array of string</td>
+  <td style="text-align: left">ID of devices will get push</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">action</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Refer to <a href="#action-definition">Action</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">order_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">ID of callback</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">matched_policy</td>
+  <td style="text-align: left">object</td>
+  <td style="text-align: left">Matched policy info, refet to <a href="#rule-type-definition">Rule Type</a></td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_54">Callback</h4>
+  
+  <p>An example of a callback:</p>
+  
+  <div><pre><code class="language-none">{
+    &quot;behavior_result&quot;: 2,
+    &quot;behavior_type&quot;: 1,
+    &quot;order_id&quot;: 10000000027,
+    &quot;service_id&quot;: 2
+  }</code></pre></div>
+  
+  <ul>
+  <li><a href="#callback-definition">View callback definition</a></li>
+  </ul>
+  
+  <h4 id="toc_55">Possible Errors</h4>
+  
+  <h5 id="toc_56">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_57"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="get-device-2fa"></a></p>
+  
+  <h2 id="toc_58">Get Device 2FA</h2>
+  
+  <p>Get user&#39;s devices 2FA status.</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/2fa?account=<code>USER_ACCOUNT</code>&amp;start_index=<code>FROM</code>&amp;request_number=<code>COUNT</code></p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/2fa?account=<code>USER_ACCOUNT</code>&amp;order_id=<code>CALLBACK_ID</code></p>
+  
+  <ul>
+  <li><a href="#curl-get-device-2fa">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_59">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_60">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/2fa?account=johndoe&amp;start_index=0&amp;request_number=10
+  /v1/api/users/2fa?account=johndoe&amp;order_id=10000000012</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_61">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_62">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;items&quot;: [
+      {
+        &quot;order_id&quot;: 10000000031,
+        &quot;type&quot;: 272,
+        &quot;user_action&quot;: 2,
+        &quot;state&quot;: 1,
+        &quot;updated_time&quot;: 1574405409,
+        &quot;message_type&quot;: 1,
+        &quot;message_title&quot;: &quot;TITLE OF PUSH&quot;,
+        &quot;message_body&quot;: &quot;BODY OF PUSH&quot;,
+        &quot;device_sent&quot;: 1
+      }
+    ]
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">order_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Callback ID</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">type</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Refer to <a href="#2fa-type-definition">2FA Type</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">user_action</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Refer to <a href="#user-action-definition">User Action</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">state</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Refer to <a href="#2fa-state-definition">2FA State</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">updated_time</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">2FA update unix time in UTC</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">message_title</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Title of push notification</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">message_body</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Body of push notification</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">message_type</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Service event type</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">device_sent</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Device count that received this push notification</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_63">Possible Errors</h4>
+  
+  <h5 id="toc_64">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_65"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="cancel-device-2fa"></a></p>
+  
+  <h2 id="toc_66">Cancel Device 2FA</h2>
+  
+  <p>Cancel the 2FA sent via <code>/v1/api/devices/2fa</code> API.</p>
+  
+  <p><strong><code>DELETE</code></strong> /v1/api/users/2fa/<code>ORDER_ID</code>?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-cancel-device-2fa">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_67">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_68">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/2fa/10000000012?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_69">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_70">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;canceled_devices&quot;: [
+      &quot;DBLVRUU9dSHjYFBUNQTJrsxMiJN8iz6iRKdXtVdHQawC&quot;
+    ]
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">canceled_devices</td>
+  <td style="text-align: left">array of string</td>
+  <td style="text-align: left">Devices&#39; 2FA has been canceled</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_71">Possible Errors</h4>
+  
+  <h5 id="toc_72">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_73"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="get-user-info"></a></p>
+  
+  <h2 id="toc_74">Get User Info</h2>
+  
+  <p>Get user info.</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/me?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-get-user-info">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_75">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_76">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/me?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_77">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_78">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;account&quot;: &quot;johndoe&quot;,
+    &quot;user_email&quot;: &quot;johndoe@example.com&quot;,
+    &quot;service_id&quot;: 2,
+    &quot;device_count&quot;: 1,
+    &quot;is_setup_pin&quot;: true
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User account</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">user_email</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User email</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">service_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">Service ID</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">device_count</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Count of paired devices</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">is_setup_pin</td>
+  <td style="text-align: left">boolean</td>
+  <td style="text-align: left">PIN is set or not</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h4 id="toc_79">Possible Errors</h4>
+  
+  <h5 id="toc_80">Refer to <a href="#common-errors">Common Errors</a></h5>
+  
+  <h5 id="toc_81"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="query-callback-status"></a></p>
+  
+  <h2 id="toc_82">Query Callback Status</h2>
+  
+  <p>Query callbacks&#39; status belong to requester&#39;s company.</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/order/status</p>
+  
+  <ul>
+  <li><a href="#curl-query-callback-status">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_83">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_84">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/order/status?account=johndoe</code></pre></div>
+  
+  <h6 id="toc_85">Post body</h6>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;order_ids&quot;: [
+      10000000006,
+      20000000010
+    ]
+  }</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_86">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h6 id="toc_87">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">order_ids</td>
+  <td style="text-align: left">array</td>
+  <td style="text-align: left">ID of callbacks</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_88">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;order_status&quot;: [
+      {
+        &quot;is_exist&quot;: true,
+        &quot;order_id&quot;: 10000000006,
+        &quot;behavior_type&quot;: 1,
+        &quot;behavior_result&quot;: 0,
+        &quot;addon&quot;: {}
+      },
+      {
+        &quot;is_exist&quot;: true,
+        &quot;order_id&quot;: 20000000010,
+        &quot;behavior_type&quot;: 2,
+        &quot;behavior_result&quot;: 2,
+        &quot;addon&quot;: {}
+      }
+    ]
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">is_exist</td>
+  <td style="text-align: left">boolean</td>
+  <td style="text-align: left">This order_id exists or not</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">order_id</td>
+  <td style="text-align: left">int64</td>
+  <td style="text-align: left">ID of callback</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">behavior_type</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left"><a href="#callback-definition">View callback definition</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">behavior_result</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left"><a href="#callback-definition">View callback definition</a></td>
+  </tr>
+  <tr>
+  <td style="text-align: left">addon</td>
+  <td style="text-align: left">object</td>
+  <td style="text-align: left">The custom fields of request</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p><a name="verify-user-totp"></a></p>
+  
+  <h2 id="toc_89">Verify User TOTP</h2>
+  
+  <p>Verify user&#39;s totp.</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/totpverify?account=<code>USER_ACCOUNT</code>&amp;code=<code>TOTP</code></p>
+  
+  <ul>
+  <li><a href="#curl-verify-user-totp">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_90">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_91">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_92">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">code</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">totp</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_93">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
     &quot;result&quot;: true
-}</code></pre></div>
-
-<p><a name="send-verification-email"></a></p>
-
-<h2 id="toc_105">Send verification code to user&#39;s email</h2>
-
-<p>Send verification code and redirect to service provider after user click link in email </p>
-
-<p><strong><code>POST</code></strong> /v1/api/users/info/email?account=<code>USER_ACCOUNT</code></p>
-
-<ul>
-<li><a href="#curl-send-verification-email">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_106">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_107">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_108">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-</tbody>
-</table>
-
-<h6 id="toc_109">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">mode</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">verification type. 0: String, 1: Number</td>
-</tr>
-<tr>
-<td style="text-align: left">length</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
-</tr>
-<tr>
-<td style="text-align: left">duration</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
-</tr>
-<tr>
-<td style="text-align: left">redirect_url</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">URL in email with verification code and state</td>
-</tr>
-<tr>
-<td style="text-align: left">state</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Defined by Service Provider. Service Provider will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
-</tr>
-</tbody>
-</table>
-
-<div><pre><code class="language-javascript">{
-    &quot;mode&quot;:1,
-    &quot;length&quot;:32,
-    &quot;duration&quot;:10,
-    &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
-    &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
-}</code></pre></div>
-
-<h5 id="toc_110">Response Format</h5>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">action_token</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Verify verification code with this action token.</td>
-</tr>
-</tbody>
-</table>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;action_token&quot;: &quot;HnnTG7MQ1hUcrRtTFx9g4bHvogTCr48hMRbUqDxrjR2E&quot;
-}</code></pre></div>
-
-<p><span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and verification code by URL. Then call Check Verfiication Code with account, actiontoken to verify verification code.</span></p>
-
-<p><a name="check-verification-code"></a></p>
-
-<h2 id="toc_111">Check verification code</h2>
-
-<p>Check verification code</p>
-
-<p><strong><code>GET</code></strong> /v1/api/users/info/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
-
-<ul>
-<li><a href="#curl-check-verification-code">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_112">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_113">API with query string</h6>
-
-<div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3Lz&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_114">Query string</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">account</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Requester account</td>
-</tr>
-<tr>
-<td style="text-align: left">actiontoken</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">In resposne of Send Verification Email</td>
-</tr>
-<tr>
-<td style="text-align: left">token</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Verification code</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_115">Response Format</h5>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">result</td>
-<td style="text-align: left">bool</td>
-<td style="text-align: left">Pass: TRUE, Failed: FALSE</td>
-</tr>
-</tbody>
-</table>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;result&quot;: true
-}</code></pre></div>
-
-<p><a name="mock-server"></a></p>
-
-<h1 id="toc_116">Mock Server</h1>
-
-<h2 id="toc_117">Setup Configuration</h2>
-
-<blockquote>
-<p>Set following configuration in mockserver.app.conf</p>
-
-<blockquote>
-<p>Require API code and API secret on web admin console</p>
-</blockquote>
-</blockquote>
-
-<div><pre><code class="language-none">api_server_url=&quot;CYBAVO_AUTHSEC_API_SERVER&quot;
-api_code=&quot;SERVICE_API_CODE&quot;
-api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
-
-<h2 id="toc_118">Register mock server URL</h2>
-
-<blockquote>
-<p>Set notification callback URL on web admin console</p>
-</blockquote>
-
-<p>Mock server callback URL</p>
-
-<div><pre><code class="language-none">http://localhost:8892/v1/mock/callback</code></pre></div>
-
-<blockquote>
-<p>To ensure that the service provider has processed the notification callback, the CYBAVO AuthSec API server will continue to send notification callbacks to the service provider until a callback confirmation (HTTP/1.1 200 OK) is received.</p>
-</blockquote>
-
-<h2 id="toc_119">How to compile</h2>
-
-<ul>
-<li>Put sample code to {YOUR_GO_PATH}/src/github.com/cybavo/AUTH_MOCK_SERVER</li>
-<li>Execute
-
-<ul>
-<li>glide install</li>
-<li>go build ./mockserver.go</li>
-<li>./mockserver</li>
-</ul></li>
-</ul>
-
-<p><a name="curl-testing-commands"></a></p>
-
-<h2 id="toc_120">CURL Testing Commands</h2>
-
-<p><a name="curl-register-new-user"></a></p>
-
-<h4 id="toc_121">Register a new user</h4>
-
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
-&quot;http://localhost:8892/v1/mock/users&quot;</code></pre></div>
-
-<ul>
-<li><a href="#register-new-user">API definition</a></li>
-</ul>
-
-<p><a name="curl-pair-device"></a></p>
-
-<h4 id="toc_122">Pair device</h4>
-
-<div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#pair-device">API definition</a></li>
-</ul>
-
-<p><a name="curl-setup-pin-code"></a></p>
-
-<h4 id="toc_123">Setup PIN code</h4>
-
-<div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/users/pin?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#setup-pin-code">API definition</a></li>
-</ul>
-
-<p><a name="curl-get-devices"></a></p>
-
-<h4 id="toc_124">Get devices</h4>
-
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#get-devices">API definition</a></li>
-</ul>
-
-<p><a name="curl-unpair-devices"></a></p>
-
-<h4 id="toc_125">Remove devices</h4>
-
-<div><pre><code class="language-none">curl -X DELETE -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
-&quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#unpair-devices">API definition</a></li>
-</ul>
-
-<p><a name="curl-send-push"></a></p>
-
-<h4 id="toc_126">Send push</h4>
-
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
-&quot;http://localhost:8892/v1/mock/devices/2fa?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#send-push">API definition</a></li>
-</ul>
-
-<p><a name="curl-get-device-2fa"></a></p>
-
-<h4 id="toc_127">Get device 2FA</h4>
-
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;start_index=FROM&amp;request_number=COUNT&quot;
-curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;order_id=ORDER_ID&quot;</code></pre></div>
-
-<ul>
-<li><a href="#get-device-2fa">API definition</a></li>
-</ul>
-
-<p><a name="curl-cancel-device-2fa"></a></p>
-
-<h4 id="toc_128">Cancel device 2FA</h4>
-
-<div><pre><code class="language-none">curl -X DELETE &quot;http://localhost:8892/v1/mock/users/2fa/ORDER_ID?account=Erline&quot;</code></pre></div>
-
-<ul>
-<li><a href="#cancel-device-2fa">API definition</a></li>
-</ul>
-
-<p><a name="curl-query-user-info"></a></p>
-
-<h4 id="toc_129">Query user info</h4>
-
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/me?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#query-user-info">API definition</a></li>
-</ul>
-
-<p><a name="curl-query-callback-status"></a></p>
-
-<h4 id="toc_130">Query callback status</h4>
-
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
-&quot;http://localhost:8892/v1/mock/order/status?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#query-callback-status">API definition</a></li>
-</ul>
-
-<p><a name="curl-verify-user-totp"></a></p>
-
-<h4 id="toc_131">Verify user TOTP</h4>
-
-<div><pre><code class="language-none">curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
-
-<ul>
-<li><a href="#verify-user-totp">API definition</a></li>
-</ul>
-
-<p><a name="curl-send-login-otp"></a></p>
-
-<h4 id="toc_132">Send Login OTP to Email</h4>
-
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
-http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
-
-<ul>
-<li><a href="#send-login-otp">API definition</a></li>
-</ul>
-
-<p><a name="curl-verify-login-otp"></a></p>
-
-<h4 id="toc_133">Verify Login OTP</h4>
-
-<div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
-
-<ul>
-<li><a href="#verify-login-otp">API definition</a></li>
-</ul>
-
-<p><a name="curl-send-verification-email"></a></p>
-
-<h4 id="toc_134">Send verification code to user&#39;s email</h4>
-
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;mode&quot;:1,&quot;length&quot;:32,&quot;otp_type&quot;:1,&quot;duration&quot;:10,&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;,&quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
-&quot;http://localhost:8892/v1/mock/users/info/email?account=johndoe&quot;</code></pre></div>
-
-<ul>
-<li><a href="#send-verification-email">API definition</a></li>
-</ul>
-
-<p><a name="curl-check-verification-code"></a></p>
-
-<h4 id="toc_135">Check verification code</h4>
-
-<div><pre><code class="language-none">curl -X GET -d &quot;http://localhost:8892/v1/mock/users/info/verify?account=johndoe&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
-
-<ul>
-<li><a href="#check-verification-code">API definition</a></li>
-</ul>
-
-<h5 id="toc_136"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="other-language-versions"></a></p>
-
-<h2 id="toc_137">Other Language Versions</h2>
-
-<ul>
-<li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_JAVASCRIPT">Javascript</a></li>
-<li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_PHP">PHP</a></li>
-</ul>
-
-<h5 id="toc_138"><a href="#table-of-contents">Back to top</a></h5>
-
-<h1 id="toc_139">Appendix</h1>
-
-<p><a name="callback-definition"></a></p>
-
-<h2 id="toc_140">Callback Definition</h2>
-
-<table>
+  }</code></pre></div>
+  
+  <p>The response includes the following parameters:</p>
+  
+  <table>
+  <thead>
   <tr>
-    <td>Field</td>
-    <td>Type</td>
-    <td>Description</td>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">result</td>
+  <td style="text-align: left">boolean</td>
+  <td style="text-align: left">The result of totp verification</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p><a name="send-login-otp"></a></p>
+  
+  <h2 id="toc_94">Send Login OTP to Email</h2>
+  
+  <p>Users click the link in email to login</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/users/emailotp?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-send-login-otp">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_95">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_96">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/emailotp?account=johndoe</code></pre></div>
+  
+  <h6 id="toc_97">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">mode</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">verification type. 0: String, 1: Number</td>
   </tr>
   <tr>
-    <td>order_id</td>
-    <td> int64 </td>
-    <td>ID of callback</td>
+  <td style="text-align: left">length</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
   </tr>
   <tr>
-    <td>service_id</td>
-    <td>int64</td>
-    <td>ID of request service</td>
+  <td style="text-align: left">duration</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
   </tr>
   <tr>
-    <td>behavior_type</td>
-    <td>int</td>
-    <td rowspan="3">
-      <b>1</b> - Pair Device<br>
-      <b>2</b> - Setup PIN<br>
-      <b>9</b> - Custom Message<br>
-    </td>
+  <td style="text-align: left">redirect_url</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">URL in email with verification code and state</td>
   </tr>
-  <tr/><tr/>
   <tr>
-    <td>behavior_result</td>
-    <td>int</td>
-    <td rowspan="5">
-      <b>0</b> - Pending<br>
-      <b>1</b> - Rejected<br>
-      <b>2</b> - Accepted<br>
-      <b>3</b> - Expired<br>
-      <b>4</b> - Failed
-    </td>
+  <td style="text-align: left">state</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Defined by Service Provider. Service Provider will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
   </tr>
-</table>
+  </tbody>
+  </table>
+  
+  <div><pre><code class="language-javascript">{
+      &quot;mode&quot;:1,
+      &quot;length&quot;:32,
+      &quot;duration&quot;:10,
+      &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
+      &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
+  }</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_98">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_99">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;action_token&quot;: &quot;Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&quot;
+  }</code></pre></div>
+  
+  <p><span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and token by URL. Then call Verify Login Email API with account, actiontoken to verify token.</span></p>
+  
+  <p><a name="verify-login-otp"></a></p>
+  
+  <h2 id="toc_100">Verify Login Email OTP</h2>
+  
+  <p>Users click the link in email to login, and service provider retrive login token to verify</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/emailotp/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
+  
+  <ul>
+  <li><a href="#curl-verify-login-otp">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_101">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_102">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=Ek7b9nXGEYgXpZFjGBprwwzZsL3rNSRFyUUzMYXS5ns2&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_103">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">actiontoken</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">In resposne of Send Login OTP to Email</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">token</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Token in email</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_104">Response Format</h5>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+      &quot;result&quot;: true
+  }</code></pre></div>
+  
+  <p><a name="send-verification-email"></a></p>
+  
+  <h2 id="toc_105">Send verification code to user&#39;s email</h2>
+  
+  <p>Send verification code and redirect to service provider after user click link in email </p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/users/info/email?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-send-verification-email">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_106">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_107">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_108">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h6 id="toc_109">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">mode</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">verification type. 0: String, 1: Number</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">length</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">The length of verification code (Option: default vaule of number mode is 6 and string mode is 32)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">duration</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">Verfiication code will expire after x minute (Option: default vaule is 10 min)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">redirect_url</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">URL in email with verification code and state</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">state</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Defined by Service Provider. Service Provider will create link with a &quot;verification code&quot; and the same &quot;state&quot; parameter you provided. Service provider can verify the same state to make sure that this request sent by it.</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <div><pre><code class="language-javascript">{
+      &quot;mode&quot;:1,
+      &quot;length&quot;:32,
+      &quot;duration&quot;:10,
+      &quot;redirect_url&quot;:&quot;https://serviceprovider.com/user/active&quot;,
+      &quot;state&quot;:&quot;CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&quot;
+  }</code></pre></div>
+  
+  <h5 id="toc_110">Response Format</h5>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">action_token</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Verify verification code with this action token.</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;action_token&quot;: &quot;HnnTG7MQ1hUcrRtTFx9g4bHvogTCr48hMRbUqDxrjR2E&quot;
+  }</code></pre></div>
+  
+  <p><span style="color:red">* Service Provider should store state, account and actiontoken after receiving actiontoken. When user clicks the login link in email, Service Provider retrieves state and verification code by URL. Then call Check Verfiication Code with account, actiontoken to verify verification code.</span></p>
+  
+  <p><a name="check-verification-code"></a></p>
+  
+  <h2 id="toc_111">Check verification code</h2>
+  
+  <p>Check verification code</p>
+  
+  <p><strong><code>GET</code></strong> /v1/api/users/info/verify?account=<code>USER_ACCOUNT</code>&amp;actiontoken=<code>ACTION_TOKEN</code>&amp;token=<code>TOKEN</code></p>
+  
+  <ul>
+  <li><a href="#curl-check-verification-code">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_112">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_113">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/emailotp/verify?account=johndoe&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3Lz&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_114">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">actiontoken</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">In resposne of Send Verification Email</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">token</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Verification code</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_115">Response Format</h5>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">result</td>
+  <td style="text-align: left">bool</td>
+  <td style="text-align: left">Pass: TRUE, Failed: FALSE</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;result&quot;: true
+  }</code></pre></div>
+  
+  <p><a name="update-user-info"></a></p>
+  
+  <h2 id="toc_116">Update User Information</h2>
+  
+  <p>Update user&#39;s name, email, locale and phone setting</p>
+  
+  <p><strong><code>POST</code></strong> /v1/api/users/edit?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-update-user-info">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_117">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_118">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/edit?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_119">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h6 id="toc_120">Post body</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">name</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User&#39;s name</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">email</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User&#39;s email</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">locale</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User&#39;s locale, such as en, zh-TW, jp, ...</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">phone</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">User&#39;s phone</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;name&quot;: &quot;John&quot;,
+    &quot;email&quot;: &quot;john@cybavo.com&quot;,
+    &quot;locale&quot;: &quot;en&quot;,
+    &quot;phone&quot;: &quot;+886123456&quot;,
+  }</code></pre></div>
+  
+  <h5 id="toc_121">Response Format</h5>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">result</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">1: Success</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;result&quot;: 1
+  }</code></pre></div>
+  
+  <p><a name="delete-user"></a></p>
+  
+  <h2 id="toc_122">Delete User</h2>
+  
+  <p>Delete user&#39;s data in AuthSec server to compliance with GDPR</p>
+  
+  <p><strong><code>DELETE</code></strong> /v1/api/users/remove?account=<code>USER_ACCOUNT</code></p>
+  
+  <ul>
+  <li><a href="#curl-delete-user">Sample curl command</a></li>
+  </ul>
+  
+  <h5 id="toc_123">Request Format</h5>
+  
+  <p>An example of the request:</p>
+  
+  <h6 id="toc_124">API with query string</h6>
+  
+  <div><pre><code class="language-none">/v1/api/users/remove?account=johndoe</code></pre></div>
+  
+  <p>The request includes the following parameters:</p>
+  
+  <h6 id="toc_125">Query string</h6>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">account</td>
+  <td style="text-align: left">string</td>
+  <td style="text-align: left">Requester account</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_126">Response Format</h5>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">Field</th>
+  <th style="text-align: left">Type</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">result</td>
+  <td style="text-align: left">int</td>
+  <td style="text-align: left">1: Success</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <p>An example of a successful response:</p>
+  
+  <div><pre><code class="language-javascript">{
+    &quot;result&quot;: 1
+  }</code></pre></div>
+  
+  <p><a name="mock-server"></a></p>
+  
+  <h1 id="toc_127">Mock Server</h1>
+  
+  <h2 id="toc_128">Setup Configuration</h2>
+  
+  <blockquote>
+  <p>Set following configuration in mockserver.app.conf</p>
+  
+  <blockquote>
+  <p>Require API code and API secret on web admin console</p>
+  </blockquote>
+  </blockquote>
+  
+  <div><pre><code class="language-none">api_server_url=&quot;CYBAVO_AUTHSEC_API_SERVER&quot;
+  api_code=&quot;SERVICE_API_CODE&quot;
+  api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
+  
+  <h2 id="toc_129">Register mock server URL</h2>
+  
+  <blockquote>
+  <p>Set notification callback URL on web admin console</p>
+  </blockquote>
+  
+  <p>Mock server callback URL</p>
+  
+  <div><pre><code class="language-none">http://localhost:8892/v1/mock/callback</code></pre></div>
+  
+  <blockquote>
+  <p>To ensure that the service provider has processed the notification callback, the CYBAVO AuthSec API server will continue to send notification callbacks to the service provider until a callback confirmation (HTTP/1.1 200 OK) is received.</p>
+  </blockquote>
+  
+  <h2 id="toc_130">How to compile</h2>
+  
+  <ul>
+  <li>Put sample code to {YOUR_GO_PATH}/src/github.com/cybavo/AUTH_MOCK_SERVER</li>
+  <li>Execute
+  
+  <ul>
+  <li>glide install</li>
+  <li>go build ./mockserver.go</li>
+  <li>./mockserver</li>
+  </ul></li>
+  </ul>
+  
+  <p><a name="curl-testing-commands"></a></p>
+  
+  <h2 id="toc_131">CURL Testing Commands</h2>
+  
+  <p><a name="curl-register-new-user"></a></p>
+  
+  <h4 id="toc_132">Register a new user</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;account&quot;:&quot;johndoe&quot;,&quot;name&quot;:&quot;JOHN DOE&quot;,&quot;email&quot;:&quot;johndoe@example.com&quot;,&quot;locale&quot;:&quot;en&quot;}&#39; \
+  &quot;http://localhost:8892/v1/mock/users&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#register-new-user">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-pair-device"></a></p>
+  
+  <h4 id="toc_133">Pair device</h4>
+  
+  <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#pair-device">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-setup-pin-code"></a></p>
+  
+  <h4 id="toc_134">Setup PIN code</h4>
+  
+  <div><pre><code class="language-none">curl -X POST &quot;http://localhost:8892/v1/mock/users/pin?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#setup-pin-code">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-get-devices"></a></p>
+  
+  <h4 id="toc_135">Get devices</h4>
+  
+  <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#get-devices">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-unpair-devices"></a></p>
+  
+  <h4 id="toc_136">Remove devices</h4>
+  
+  <div><pre><code class="language-none">curl -X DELETE -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;devices&quot;:[&quot;DEVICE_ID&quot;]}&#39; \
+  &quot;http://localhost:8892/v1/mock/devices?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#unpair-devices">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-send-push"></a></p>
+  
+  <h4 id="toc_137">Send push</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;type&quot;:1,&quot;title&quot;:&quot;PUSH TITLE&quot;,&quot;body&quot;:&quot;PUSH DESC&quot;,&quot;data&quot;:{&quot;field_1_key&quot;:&quot;field_1_value&quot;,&quot;field_2_key&quot;:&quot;field_2_value&quot;},&quot;client_ip&quot;:&quot;192.168.101.71&quot;,&quot;client_platform&quot;:1}&#39; \
+  &quot;http://localhost:8892/v1/mock/devices/2fa?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#send-push">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-get-device-2fa"></a></p>
+  
+  <h4 id="toc_138">Get device 2FA</h4>
+  
+  <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;start_index=FROM&amp;request_number=COUNT&quot;
+  curl -X GET &quot;http://localhost:8892/v1/mock/users/2fa?account=johndoe&amp;order_id=ORDER_ID&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#get-device-2fa">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-cancel-device-2fa"></a></p>
+  
+  <h4 id="toc_139">Cancel device 2FA</h4>
+  
+  <div><pre><code class="language-none">curl -X DELETE &quot;http://localhost:8892/v1/mock/users/2fa/ORDER_ID?account=Erline&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#cancel-device-2fa">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-query-user-info"></a></p>
+  
+  <h4 id="toc_140">Query user info</h4>
+  
+  <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/me?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#query-user-info">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-query-callback-status"></a></p>
+  
+  <h4 id="toc_141">Query callback status</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;order_ids&quot;:[10000000002,10000000003]}&#39; \
+  &quot;http://localhost:8892/v1/mock/order/status?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#query-callback-status">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-verify-user-totp"></a></p>
+  
+  <h4 id="toc_142">Verify user TOTP</h4>
+  
+  <div><pre><code class="language-none">curl http://localhost:8892/v1/mock/users/totpverify?account=johndoe&amp;code=539826</code></pre></div>
+  
+  <ul>
+  <li><a href="#verify-user-totp">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-send-login-otp"></a></p>
+  
+  <h4 id="toc_143">Send Login OTP to Email</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;, &quot;duration&quot;:10, &quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+  http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
+  
+  <ul>
+  <li><a href="#send-login-otp">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-verify-login-otp"></a></p>
+  
+  <h4 id="toc_144">Verify Login OTP</h4>
+  
+  <div><pre><code class="language-none">curl -X GET &quot;http://localhost:8892/v1/mock/users/emailotp/verify?account=johndoe&amp;token=ChkReGmPsuh3iMbQUjFGTrCG17WMDzK4FZ6f5na3pMeF&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#verify-login-otp">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-send-verification-email"></a></p>
+  
+  <h4 id="toc_145">Send verification code to user&#39;s email</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;mode&quot;:1,&quot;length&quot;:32,&quot;otp_type&quot;:1,&quot;duration&quot;:10,&quot;redirect_url&quot;:&quot;http://localhost:8080&quot;,&quot;state&quot;:&quot;nTG7MQ1hUcrR&quot;}&#39; \
+  &quot;http://localhost:8892/v1/mock/users/info/email?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#send-verification-email">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-check-verification-code"></a></p>
+  
+  <h4 id="toc_146">Check verification code</h4>
+  
+  <div><pre><code class="language-none">curl -X GET -d &quot;http://localhost:8892/v1/mock/users/info/verify?account=johndoe&amp;token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&amp;actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#check-verification-code">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-update-user-info"></a></p>
+  
+  <h4 id="toc_147">Update user info</h4>
+  
+  <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;name&quot;:&quot;John&quot;,&quot;email&quot;:&quot;john@cybavo.com&quot;,&quot;locale&quot;:&quot;en&quot;,&quot;phone&quot;:&quot;+886123456&quot;}&#39; \
+  &quot;http://localhost:8892/v1/mock/users/edit?account=johndoe</code></pre></div>
+  
+  <ul>
+  <li><a href="#update-user-info">API definition</a></li>
+  </ul>
+  
+  <p><a name="curl-delete-user"></a></p>
+  
+  <h4 id="toc_148">Delete user</h4>
+  
+  <div><pre><code class="language-none">curl -X DELETE -d &quot;http://localhost:8892/v1/mock/users/remove?account=johndoe&quot;</code></pre></div>
+  
+  <ul>
+  <li><a href="#delete-user">API definition</a></li>
+  </ul>
+  
+  <h5 id="toc_149"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="other-language-versions"></a></p>
+  
+  <h2 id="toc_150">Other Language Versions</h2>
+  
+  <ul>
+  <li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_JAVASCRIPT">Javascript</a></li>
+  <li><a href="https://github.com/CYBAVO/AUTH_MOCK_SERVER_PHP">PHP</a></li>
+  </ul>
+  
+  <h5 id="toc_151"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <h1 id="toc_152">Appendix</h1>
+  
+  <p><a name="callback-definition"></a></p>
+  
+  <h2 id="toc_153">Callback Definition</h2>
+  
+  <table>
+    <tr>
+      <td>Field</td>
+      <td>Type</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <td>order_id</td>
+      <td> int64 </td>
+      <td>ID of callback</td>
+    </tr>
+    <tr>
+      <td>service_id</td>
+      <td>int64</td>
+      <td>ID of request service</td>
+    </tr>
+    <tr>
+      <td>behavior_type</td>
+      <td>int</td>
+      <td rowspan="3">
+        <b>1</b> - Pair Device<br>
+        <b>2</b> - Setup PIN<br>
+        <b>9</b> - Custom Message<br>
+      </td>
+    </tr>
+    <tr/><tr/>
+    <tr>
+      <td>behavior_result</td>
+      <td>int</td>
+      <td rowspan="5">
+        <b>0</b> - Pending<br>
+        <b>1</b> - Rejected<br>
+        <b>2</b> - Accepted<br>
+        <b>3</b> - Expired<br>
+        <b>4</b> - Failed
+      </td>
+    </tr>
+  </table>
+  
+  <h5 id="toc_154"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="platform-definition"></a></p>
+  
+  <h2 id="toc_155">Platform Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">1</td>
+  <td style="text-align: left">Android</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">2</td>
+  <td style="text-align: left">iOS</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">4</td>
+  <td style="text-align: left">Browser</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_156"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="action-definition"></a></p>
+  
+  <h2 id="toc_157">Action Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">0</td>
+  <td style="text-align: left">No Action</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">1</td>
+  <td style="text-align: left">Always Allow</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">2</td>
+  <td style="text-align: left">Require 2FA</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">3</td>
+  <td style="text-align: left">Deny Access</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_158"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="user-action-definition"></a></p>
+  
+  <h2 id="toc_159">User Action Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">0</td>
+  <td style="text-align: left">Pending</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">1</td>
+  <td style="text-align: left">Accept</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">2</td>
+  <td style="text-align: left">Reject</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_160"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="2fa-type-definition"></a></p>
+  
+  <h2 id="toc_161">2FA Type Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">545</td>
+  <td style="text-align: left">Set User PIN</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">272</td>
+  <td style="text-align: left">Service Accept/Reject Event</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">769</td>
+  <td style="text-align: left">Service PIN Code Event</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_162"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="2fa-state-definition"></a></p>
+  
+  <h2 id="toc_163">2FA State Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">0</td>
+  <td style="text-align: left">Created</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">1</td>
+  <td style="text-align: left">Done</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">2</td>
+  <td style="text-align: left">Passed</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">3</td>
+  <td style="text-align: left">Canceled</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">4</td>
+  <td style="text-align: left">Failed</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_164"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="rule-type-definition"></a></p>
+  
+  <h2 id="toc_165">Rule Type Definition</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">ID</th>
+  <th style="text-align: left">Description</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">1</td>
+  <td style="text-align: left">Global Rule</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">2</td>
+  <td style="text-align: left">User Defined Rule</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">3</td>
+  <td style="text-align: left">Risk Control Rule</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_166"><a href="#table-of-contents">Back to top</a></h5>
+  
+  <p><a name="common-errors"></a></p>
+  
+  <h2 id="toc_167">Common Errors</h2>
+  
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left">HTTP Status Code</th>
+  <th style="text-align: left">Error Code</th>
+  <th style="text-align: left">Error Message</th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+  <td style="text-align: left">400</td>
+  <td style="text-align: left">112</td>
+  <td style="text-align: left">Invalid parameter</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">400</td>
+  <td style="text-align: left">-</td>
+  <td style="text-align: left">JSON unmarshal failure reason</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">403</td>
+  <td style="text-align: left">-</td>
+  <td style="text-align: left">Forbidden</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">403</td>
+  <td style="text-align: left">703</td>
+  <td style="text-align: left">Operation failed</td>
+  </tr>
+  <tr>
+  <td style="text-align: left">503</td>
+  <td style="text-align: left">903</td>
+  <td style="text-align: left">KMS out of serivce. Please try again later.</td>
+  </tr>
+  </tbody>
+  </table>
+  
+  <h5 id="toc_168"><a href="#table-of-contents">Back to top</a></h5>
+  
 
-<h5 id="toc_141"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="platform-definition"></a></p>
-
-<h2 id="toc_142">Platform Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">1</td>
-<td style="text-align: left">Android</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">iOS</td>
-</tr>
-<tr>
-<td style="text-align: left">4</td>
-<td style="text-align: left">Browser</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_143"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="action-definition"></a></p>
-
-<h2 id="toc_144">Action Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">0</td>
-<td style="text-align: left">No Action</td>
-</tr>
-<tr>
-<td style="text-align: left">1</td>
-<td style="text-align: left">Always Allow</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">Require 2FA</td>
-</tr>
-<tr>
-<td style="text-align: left">3</td>
-<td style="text-align: left">Deny Access</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_145"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="user-action-definition"></a></p>
-
-<h2 id="toc_146">User Action Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">0</td>
-<td style="text-align: left">Pending</td>
-</tr>
-<tr>
-<td style="text-align: left">1</td>
-<td style="text-align: left">Accept</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">Reject</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_147"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="2fa-type-definition"></a></p>
-
-<h2 id="toc_148">2FA Type Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">545</td>
-<td style="text-align: left">Set User PIN</td>
-</tr>
-<tr>
-<td style="text-align: left">272</td>
-<td style="text-align: left">Service Accept/Reject Event</td>
-</tr>
-<tr>
-<td style="text-align: left">769</td>
-<td style="text-align: left">Service PIN Code Event</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_149"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="2fa-state-definition"></a></p>
-
-<h2 id="toc_150">2FA State Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">0</td>
-<td style="text-align: left">Created</td>
-</tr>
-<tr>
-<td style="text-align: left">1</td>
-<td style="text-align: left">Done</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">Passed</td>
-</tr>
-<tr>
-<td style="text-align: left">3</td>
-<td style="text-align: left">Canceled</td>
-</tr>
-<tr>
-<td style="text-align: left">4</td>
-<td style="text-align: left">Failed</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_151"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="rule-type-definition"></a></p>
-
-<h2 id="toc_152">Rule Type Definition</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">1</td>
-<td style="text-align: left">Global Rule</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">User Defined Rule</td>
-</tr>
-<tr>
-<td style="text-align: left">3</td>
-<td style="text-align: left">Risk Control Rule</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_153"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="common-errors"></a></p>
-
-<h2 id="toc_154">Common Errors</h2>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">HTTP Status Code</th>
-<th style="text-align: left">Error Code</th>
-<th style="text-align: left">Error Message</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">400</td>
-<td style="text-align: left">112</td>
-<td style="text-align: left">Invalid parameter</td>
-</tr>
-<tr>
-<td style="text-align: left">400</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">JSON unmarshal failure reason</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">703</td>
-<td style="text-align: left">Operation failed</td>
-</tr>
-<tr>
-<td style="text-align: left">503</td>
-<td style="text-align: left">903</td>
-<td style="text-align: left">KMS out of serivce. Please try again later.</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_155"><a href="#table-of-contents">Back to top</a></h5>
-
-
-
-
+  
 </body>
 
 </html>

@@ -286,12 +286,28 @@ func (c *OuterController) VerifyUserOTP() {
 	c.Data["json"] = m
 }
 
-// @router /users/edit[post]
+// @router /users/edit [post]
 func (c *OuterController) UpdateUser() {
 
 	defer c.ServeJSON()
 
 	resp, err := api.MakeRequest("POST", "/v1/api/users/edit", getQueryString(c.Ctx), c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("RegisterUser failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @router /users/remove [delete]
+func (c *OuterController) DeleteUser() {
+
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest("DELETE", "/v1/api/users/remove", getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("RegisterUser failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)

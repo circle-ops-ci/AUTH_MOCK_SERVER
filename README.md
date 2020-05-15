@@ -18,6 +18,8 @@
   - [Verify Login OTP](#verify-login-otp)
   - [Send User Verification Email](#send-verification-email)
   - [Check Verification Code](#check-verification-code)
+  - [Update User Info](#update-user-info)
+  - [Delete User](#delete-user)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -978,6 +980,107 @@ An example of a successful response:
 }
 ```
 
+<a name="update-user-info"></a>
+## Update User Information
+
+Update user's name, email, locale and phone setting
+
+**`POST`** /v1/api/users/edit?account=`USER_ACCOUNT`
+
+- [Sample curl command](#curl-update-user-info)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/edit?account=johndoe
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+
+###### Post body
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| name | string | User's name |
+| email | string | User's email |
+| locale | string | User's locale, such as en, zh-TW, jp, ...|
+| phone | string | User's phone |
+
+```json
+{
+  "name": "John",
+  "email": "john@cybavo.com",
+  "locale": "en",
+  "phone": "+886123456",
+}
+```
+
+##### Response Format
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | int  | 1: Success |
+
+An example of a successful response:
+
+```json
+{
+  "result": 1
+}
+```
+
+<a name="delete-user"></a>
+## Delete User
+
+Delete user's data in AuthSec server to compliance with GDPR
+
+**`DELETE`** /v1/api/users/remove?account=`USER_ACCOUNT`
+
+- [Sample curl command](#curl-delete-user)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/users/remove?account=johndoe
+```
+
+The request includes the following parameters:
+
+###### Query string
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| account | string | Requester account |
+
+
+##### Response Format
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | int  | 1: Success |
+
+An example of a successful response:
+
+```json
+{
+  "result": 1
+}
+```
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -1125,6 +1228,21 @@ curl -X POST -H "Content-Type: application/json" -d '{"mode":1,"length":32,"otp_
 curl -X GET -d "http://localhost:8892/v1/mock/users/info/verify?account=johndoe&token=CRXWg64pAGvfm4xdyMi9NAUQefzLuFVkM7oYgt1oixRN&actiontoken=5t8VkLvw94qJtEjH2tiaCmudzW3LzLBpCB355ssdwuqj"
 ```
 - [API definition](#check-verification-code)
+
+<a name="curl-update-user-info"></a>
+#### Update user info
+```
+curl -X POST -H "Content-Type: application/json" -d '{"name":"John","email":"john@cybavo.com","locale":"en","phone":"+886123456"}' \
+"http://localhost:8892/v1/mock/users/edit?account=johndoe
+```
+- [API definition](#update-user-info)
+
+<a name="curl-delete-user"></a>
+#### Delete user
+```
+curl -X DELETE -d "http://localhost:8892/v1/mock/users/remove?account=johndoe"
+```
+- [API definition](#delete-user)
 
 ##### [Back to top](#table-of-contents)
 
