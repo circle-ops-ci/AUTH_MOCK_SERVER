@@ -317,3 +317,19 @@ func (c *OuterController) DeleteUser() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @router /healthy [get]
+func (c *OuterController) ServerHealthy() {
+
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest("GET", "/v1/api/healthy", getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("Get healthy failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

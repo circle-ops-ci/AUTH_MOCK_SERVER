@@ -34,4 +34,5 @@ func init() {
 	beego.Router("/v1/mock/callback", &controllers.CallbackController{}, "POST:Callback")
 	beego.Router("/v1/mock/users/edit", &controllers.OuterController{}, "POST:UpdateUser")
 	beego.Router("/v1/mock/users/remove", &controllers.OuterController{}, "DELETE:DeleteUser")
+	beego.Router("/v1/mock/healthy", &controllers.OuterController{}, "GET:ServerHealthy")
 }

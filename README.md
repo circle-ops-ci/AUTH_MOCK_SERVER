@@ -20,6 +20,7 @@
   - [Check Verification Code](#check-verification-code)
   - [Update User Info](#update-user-info)
   - [Delete User](#delete-user)
+  - [AuthSec Server Healthy](#server-healthy)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -1081,6 +1082,39 @@ An example of a successful response:
 }
 ```
 
+<a name="server-healthy"></a>
+## Check AuthSec Server status
+
+Check AuthSec Server status
+
+**`GET`** /v1/api/healthy
+
+- [Sample curl command](#curl-server-healthy)
+
+##### Request Format
+
+An example of the request:
+
+###### API with query string
+
+```
+/v1/api/healthy
+```
+
+##### Response Format
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | int  | 1: Ready |
+
+An example of a successful response:
+
+```json
+{
+  "result": 1
+}
+```
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -1243,6 +1277,15 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"John","email":"joh
 curl -X DELETE -d "http://localhost:8892/v1/mock/users/remove?account=johndoe"
 ```
 - [API definition](#delete-user)
+
+##### [Back to top](#table-of-contents)
+
+<a name="curl-server-healthy"></a>
+#### Server Healthy
+```
+curl -X GET -d "http://localhost:8892/v1/mock/healthy
+```
+- [API definition](#server-healthy)
 
 ##### [Back to top](#table-of-contents)
 
