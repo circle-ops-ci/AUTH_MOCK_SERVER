@@ -23,7 +23,7 @@
   - [AuthSec Server Healthy](#server-healthy)
 - Testing
 	- [Mock Server](#mock-server)
-	- [CURL Testing Commands](#curl-testing-commands)
+	- [cURL Testing Commands](#curl-testing-commands)
 	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
@@ -1148,7 +1148,7 @@ http://localhost:8892/v1/mock/callback
 
 
 <a name="curl-testing-commands"></a>
-## CURL Testing Commands
+## cURL Testing Commands
 
 <a name="curl-register-new-user"></a>
 #### Register a new user
@@ -1267,14 +1267,14 @@ curl -X GET -d "http://localhost:8892/v1/mock/users/info/verify?account=johndoe&
 #### Update user info
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"name":"John","email":"john@cybavo.com","locale":"en","phone":"+886123456"}' \
-"http://localhost:8892/v1/mock/users/edit?account=johndoe
+"http://localhost:8892/v1/mock/users/edit?account=johndoe"
 ```
 - [API definition](#update-user-info)
 
 <a name="curl-delete-user"></a>
 #### Delete user
 ```
-curl -X DELETE -d "http://localhost:8892/v1/mock/users/remove?account=johndoe"
+curl -X DELETE "http://localhost:8892/v1/mock/users/remove?account=johndoe"
 ```
 - [API definition](#delete-user)
 
@@ -1283,7 +1283,7 @@ curl -X DELETE -d "http://localhost:8892/v1/mock/users/remove?account=johndoe"
 <a name="curl-server-healthy"></a>
 #### Server Healthy
 ```
-curl -X GET -d "http://localhost:8892/v1/mock/healthy
+curl http://localhost:8892/v1/mock/healthy
 ```
 - [API definition](#server-healthy)
 

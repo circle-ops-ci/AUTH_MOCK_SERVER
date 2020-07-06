@@ -360,7 +360,7 @@ kbd {
 
 <ul>
 <li><a href="#mock-server">Mock Server</a></li>
-<li><a href="#curl-testing-commands">CURL Testing Commands</a></li>
+<li><a href="#curl-testing-commands">cURL Testing Commands</a></li>
 <li><a href="#other-language-versions">Other Language Versions</a></li>
 </ul></li>
 <li>Appendix
@@ -2239,7 +2239,7 @@ api_secret=&quot;SERVICE_API_SECRET&quot;</code></pre></div>
 
 <p><a name="curl-testing-commands"></a></p>
 
-<h2 id="toc_135">CURL Testing Commands</h2>
+<h2 id="toc_135">cURL Testing Commands</h2>
 
 <p><a name="curl-register-new-user"></a></p>
 
@@ -2403,7 +2403,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 <h4 id="toc_151">Update user info</h4>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;name&quot;:&quot;John&quot;,&quot;email&quot;:&quot;john@cybavo.com&quot;,&quot;locale&quot;:&quot;en&quot;,&quot;phone&quot;:&quot;+886123456&quot;}&#39; \
-&quot;http://localhost:8892/v1/mock/users/edit?account=johndoe</code></pre></div>
+&quot;http://localhost:8892/v1/mock/users/edit?account=johndoe&quot;</code></pre></div>
 
 <ul>
 <li><a href="#update-user-info">API definition</a></li>
@@ -2413,7 +2413,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <h4 id="toc_152">Delete user</h4>
 
-<div><pre><code class="language-none">curl -X DELETE -d &quot;http://localhost:8892/v1/mock/users/remove?account=johndoe&quot;</code></pre></div>
+<div><pre><code class="language-none">curl -X DELETE &quot;http://localhost:8892/v1/mock/users/remove?account=johndoe&quot;</code></pre></div>
 
 <ul>
 <li><a href="#delete-user">API definition</a></li>
@@ -2425,7 +2425,7 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 
 <h4 id="toc_154">Server Healthy</h4>
 
-<div><pre><code class="language-none">curl -X DELETE -d &quot;http://localhost:8892/v1/mock/healthy</code></pre></div>
+<div><pre><code class="language-none">curl http://localhost:8892/v1/mock/healthy</code></pre></div>
 
 <ul>
 <li><a href="#server-healthy">API definition</a></li>
@@ -2726,6 +2726,9 @@ http://localhost:8892/v1/mock/users/emailotp?account=johndoe</code></pre></div>
 </table>
 
 <h5 id="toc_174"><a href="#table-of-contents">Back to top</a></h5>
+
+
+
 
 </body>
 
